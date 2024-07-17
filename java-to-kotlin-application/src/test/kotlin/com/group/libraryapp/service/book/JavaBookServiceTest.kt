@@ -73,7 +73,13 @@ class JavaBookServiceTest @Autowired constructor(
         fun alreadyLoanTest() {
             val savedBook = bookRepository.save(Book("테스트"))
             val savedUser = userRepository.save(User("아무개", null))
-            userLoanHistoryRepository.save(UserLoanHistory(savedUser, savedBook.name, false))
+            userLoanHistoryRepository.save(
+                UserLoanHistory(
+                    savedUser,
+                    savedBook.name,
+                    false
+                )
+            )
             val request = BookLoanRequest("아무개", "테스트")
 
             assertThatThrownBy { bookService.loanBook(request) }
@@ -90,7 +96,13 @@ class JavaBookServiceTest @Autowired constructor(
         fun returnBookTest() {
             val savedBook = bookRepository.save(Book("테스트"))
             val savedUser = userRepository.save(User("아무개", null))
-            userLoanHistoryRepository.save(UserLoanHistory(savedUser, savedBook.name, false))
+            userLoanHistoryRepository.save(
+                UserLoanHistory(
+                    savedUser,
+                    savedBook.name,
+                    false
+                )
+            )
             val request = BookReturnRequest("아무개", "테스트")
 
             bookService.returnBook(request)
