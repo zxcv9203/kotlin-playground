@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class BookServiceTest @Autowired constructor(
+class JavaBookServiceTest @Autowired constructor(
     private val bookRepository: BookRepository,
     private val bookService: BookService,
     private val userRepository: UserRepository,
@@ -33,7 +33,7 @@ class BookServiceTest @Autowired constructor(
     }
 
     @Nested
-    inner class SaveBook {
+    inner class SaveJavaBook {
 
         @Test
         @DisplayName("[성공] 책 생성에 성공한다.")
@@ -49,7 +49,7 @@ class BookServiceTest @Autowired constructor(
     }
 
     @Nested
-    inner class LoanBook {
+    inner class LoanJavaBook {
 
 
         @Test
@@ -84,7 +84,7 @@ class BookServiceTest @Autowired constructor(
     }
 
     @Nested
-    inner class ReturnBook {
+    inner class ReturnJavaBook {
         @Test
         @DisplayName("[성공] 책 반납이 성공한다.")
         fun returnBookTest() {
