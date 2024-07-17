@@ -23,7 +23,7 @@ class UserServiceTest @Autowired constructor(
     }
 
     @Nested
-    inner class SaveUser {
+    inner class SaveJavaUser {
         @Test
         @DisplayName("[성공] 사용자 생성에 성공한다.")
         fun successTest() {
@@ -46,10 +46,12 @@ class UserServiceTest @Autowired constructor(
         @Test
         @DisplayName("[성공] 사용자 목록을 조회한다.")
         fun successTest() {
-            userRepository.saveAll(listOf(
-                User("A", 20),
-                User("B", null),
-            ))
+            userRepository.saveAll(
+                listOf(
+                    User("A", 20),
+                    User("B", null),
+                )
+            )
 
             val want = userService.getUsers()
 
@@ -62,12 +64,12 @@ class UserServiceTest @Autowired constructor(
     }
 
     @Nested
-    inner class UpdateUser {
+    inner class UpdateJavaUser {
         @Test
         @DisplayName("[성공] 사용자 이름을 수정한다.")
         fun successTest() {
             val savedUser = userRepository.save(User("A", null))
-            val request = UserUpdateRequest(savedUser.id, "B")
+            val request = UserUpdateRequest(savedUser.id!!, "B")
 
             userService.updateUserName(request)
 
@@ -77,7 +79,7 @@ class UserServiceTest @Autowired constructor(
     }
 
     @Nested
-    inner class DeleteUser {
+    inner class DeleteJavaUser {
         @Test
         @DisplayName("[성공] 사용자를 삭제한다.")
         fun successTest() {

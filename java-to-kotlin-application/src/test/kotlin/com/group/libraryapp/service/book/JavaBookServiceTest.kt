@@ -56,7 +56,12 @@ class JavaBookServiceTest @Autowired constructor(
         @DisplayName("[성공] 책 대출에 성공한다.")
         fun successTest() {
             val savedBook = bookRepository.save(Book("테스트"))
-            val savedUser = userRepository.save(User("아무개", null))
+            val savedUser = userRepository.save(
+                User(
+                    "아무개",
+                    null
+                )
+            )
             val request = BookLoanRequest("아무개", "테스트")
 
             bookService.loanBook(request)
@@ -72,7 +77,12 @@ class JavaBookServiceTest @Autowired constructor(
         @DisplayName("[실패] 책이 대출되어 있다면, 신규 대출이 실패합니다.")
         fun alreadyLoanTest() {
             val savedBook = bookRepository.save(Book("테스트"))
-            val savedUser = userRepository.save(User("아무개", null))
+            val savedUser = userRepository.save(
+                User(
+                    "아무개",
+                    null
+                )
+            )
             userLoanHistoryRepository.save(
                 UserLoanHistory(
                     savedUser,
@@ -95,7 +105,12 @@ class JavaBookServiceTest @Autowired constructor(
         @DisplayName("[성공] 책 반납이 성공한다.")
         fun returnBookTest() {
             val savedBook = bookRepository.save(Book("테스트"))
-            val savedUser = userRepository.save(User("아무개", null))
+            val savedUser = userRepository.save(
+                User(
+                    "아무개",
+                    null
+                )
+            )
             userLoanHistoryRepository.save(
                 UserLoanHistory(
                     savedUser,
