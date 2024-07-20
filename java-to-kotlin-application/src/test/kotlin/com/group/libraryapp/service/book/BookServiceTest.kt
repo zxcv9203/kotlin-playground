@@ -33,29 +33,30 @@ class BookServiceTest @Autowired constructor(
     }
 
     @Nested
-    inner class SaveJavaBook {
+    inner class SaveBook {
 
         @Test
         @DisplayName("[성공] 책 생성에 성공한다.")
         fun successTest() {
-            val request = BookRequest("테스트")
+            val request = BookRequest("테스트", "COMPUTER")
 
             bookService.saveBook(request)
 
             val want = bookRepository.findAll()
             assertThat(want).hasSize(1)
             assertThat(want[0].name).isEqualTo("테스트")
+            assertThat(want[0].type).isEqualTo("COMPUTER")
         }
     }
 
     @Nested
-    inner class LoanJavaBook {
+    inner class LoanBook {
 
 
         @Test
         @DisplayName("[성공] 책 대출에 성공한다.")
         fun successTest() {
-            val savedBook = bookRepository.save(Book("테스트"))
+            val savedBook = bookRepository.save(Book.fixture())
             val savedUser = userRepository.save(
                 User(
                     "아무개",
@@ -76,7 +77,7 @@ class BookServiceTest @Autowired constructor(
         @Test
         @DisplayName("[실패] 책이 대출되어 있다면, 신규 대출이 실패합니다.")
         fun alreadyLoanTest() {
-            val savedBook = bookRepository.save(Book("테스트"))
+            val savedBook = bookRepository.save(Book.fixture())
             val savedUser = userRepository.save(
                 User(
                     "아무개",
@@ -100,11 +101,11 @@ class BookServiceTest @Autowired constructor(
     }
 
     @Nested
-    inner class ReturnJavaBook {
+    inner class ReturnBook {
         @Test
         @DisplayName("[성공] 책 반납이 성공한다.")
         fun returnBookTest() {
-            val savedBook = bookRepository.save(Book("테스트"))
+            val savedBook = bookRepository.save(Book.fixture())
             val savedUser = userRepository.save(
                 User(
                     "아무개",
