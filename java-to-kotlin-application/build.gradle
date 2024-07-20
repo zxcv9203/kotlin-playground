@@ -7,6 +7,8 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.9.22'
     // jpa 사용시 기본 생성자 자동 추가 (public 생성자가 추가되지만 코틀린 코드에서 직접 호출할 수 없기 때문에 안전)
     id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.22'
+    // spring cglib 사용으로 인해 Proxy 객체 생성이 필요한데 코틀린에서는 final class가 기본이기 때문에 이를 변경해줄 수 있는 플러그인 추가
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.9.22'
 }
 
 group = 'com.group'
