@@ -7,6 +7,7 @@ import com.group.libraryapp.domain.user.User
 import com.group.libraryapp.domain.user.UserRepository
 import com.group.libraryapp.domain.user.loanhistory.UserLoanHistory
 import com.group.libraryapp.domain.user.loanhistory.UserLoanHistoryRepository
+import com.group.libraryapp.domain.user.loanhistory.UserLoanStatus
 import com.group.libraryapp.dto.book.request.BookLoanRequest
 import com.group.libraryapp.dto.book.request.BookRequest
 import com.group.libraryapp.dto.book.request.BookReturnRequest
@@ -72,7 +73,7 @@ class BookServiceTest @Autowired constructor(
             assertThat(want).hasSize(1)
             assertThat(want[0].bookName).isEqualTo(savedBook.name)
             assertThat(want[0].user.id).isEqualTo(savedUser.id)
-            assertThat(want[0].isReturn).isFalse()
+            assertThat(want[0].status).isEqualTo(UserLoanStatus.LOANED)
         }
 
         @Test
@@ -86,10 +87,9 @@ class BookServiceTest @Autowired constructor(
                 )
             )
             userLoanHistoryRepository.save(
-                UserLoanHistory(
+                UserLoanHistory.fixture(
                     savedUser,
                     savedBook.name,
-                    false
                 )
             )
             val request = BookLoanRequest("아무개", "테스트")
@@ -114,10 +114,10 @@ class BookServiceTest @Autowired constructor(
                 )
             )
             userLoanHistoryRepository.save(
-                UserLoanHistory(
+                UserLoanHistory.fixture(
                     savedUser,
                     savedBook.name,
-                    false
+                    UserLoanStatus.RETURNED
                 )
             )
             val request = BookReturnRequest("아무개", "테스트")
@@ -126,7 +126,7 @@ class BookServiceTest @Autowired constructor(
 
             val want = userLoanHistoryRepository.findAll()
             assertThat(want).hasSize(1)
-            assertThat(want[0].isReturn).isTrue()
+            assertThat(want[0].status).isEqualTo(UserLoanStatus.RETURNED)
         }
     }
 }
