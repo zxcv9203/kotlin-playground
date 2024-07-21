@@ -23,6 +23,10 @@ class UserLoanHistory(
         this.status = UserLoanStatus.RETURNED
     }
 
+    fun isReturned(): Boolean {
+        return this.status == UserLoanStatus.RETURNED
+    }
+
     companion object {
         fun fixture(
             user: User,
