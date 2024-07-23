@@ -9,6 +9,7 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.22'
     // spring cglib 사용으로 인해 Proxy 객체 생성이 필요한데 코틀린에서는 final class가 기본이기 때문에 이를 변경해줄 수 있는 플러그인 추가
     id 'org.jetbrains.kotlin.plugin.spring' version '1.9.22'
+    id 'org.jetbrains.kotlin.kapt' version '1.9.22'
 }
 
 group = 'com.group'
@@ -27,6 +28,10 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.9.22'
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation 'com.querydsl:querydsl-jpa:5.0.0'
+    kapt("com.querydsl:querydsl-apt:5.0.0:jpa")
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
 }
 
 tasks.named('test') {
