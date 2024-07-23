@@ -1,6 +1,5 @@
-package com.group.libraryapp.repository
+package com.group.libraryapp.repository.book
 
-import com.group.libraryapp.config.QuerydslConfig
 import com.group.libraryapp.domain.book.QBook.book
 import com.group.libraryapp.dto.book.response.BookStatResponse
 import com.querydsl.core.types.Projections
