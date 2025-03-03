@@ -1,7 +1,5 @@
 package org.example.functional.chapter5.ex02
 
-import org.example.functional.chapter5.Number
-
 data class Number(val num: Int)
 
 fun Number.toFloat(): Float = num.toFloat()

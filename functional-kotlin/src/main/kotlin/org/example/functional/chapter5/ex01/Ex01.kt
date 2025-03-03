@@ -1,4 +1,4 @@
-package org.example.functional.chapter5
+package org.example.functional.chapter5.ex01
 
 data class Number(val num: Int) {
     fun toFloat(): Float = num.toFloat()
