@@ -1,4 +1,4 @@
-package org.example.functional.chapter7
+package org.example.functional.chapter7.ex01
 
 
 fun main() {
