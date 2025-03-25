@@ -16,10 +16,8 @@ fun main() {
     val i = (1..6).asIterable()
         .filter { print("F$it, "); it % 2 == 1 }
         .map { print("M$it "); it * 2 }
-
+    // filter, map은 이미 처리되었으므로 출력 내용이 나오지 않음
     i.find { it > 3 }
-    println()
-    i.find { it > 3 } // 이미 소비되었으므로 출력되지 않음
-    println()
+    i.find { it > 3 }
     i.find { it > 3 }
 }
