@@ -11,4 +11,11 @@ fun main() {
     println(myPlus2.invoke("A", "B"))
     println(myPlus2("A", "B"))
     println("A".myPlus2("B"))
+
+    val myPlus3: String.(String) -> String = { other ->
+        this + other
+    }
+    println(myPlus3.invoke("A", "B"))
+    println(myPlus3("A", "B"))
+    println("A".myPlus3("B"))
 }
