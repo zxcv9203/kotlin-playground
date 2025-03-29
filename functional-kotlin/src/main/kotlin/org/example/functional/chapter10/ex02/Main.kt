@@ -22,4 +22,16 @@ fun main() {
     dialog.cancelButtonText = "취소"
     dialog.cancelButtonHandler = { println("취소 버튼 클릭") }
     dialog.show()
+
+    val dialog2 = Dialog()
+    val init: Dialog.() -> Unit = {
+        title = "제목"
+        message = "메시지"
+        okButtonText = "확인"
+        okButtonHandler = { println("확인 버튼 클릭") }
+        cancelButtonText = "취소"
+        cancelButtonHandler = { println("취소 버튼 클릭") }
+    }
+    init.invoke(dialog2)
+    dialog2.show()
 }
