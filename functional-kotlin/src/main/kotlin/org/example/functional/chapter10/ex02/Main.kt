@@ -13,6 +13,12 @@ class Dialog {
     }
 }
 
+fun showDialog(init: Dialog.() -> Unit): Dialog {
+    val dialog = Dialog()
+    init.invoke(dialog)
+    return dialog
+}
+
 fun main() {
     val dialog = Dialog()
     dialog.title = "제목"
@@ -34,4 +40,13 @@ fun main() {
     }
     init.invoke(dialog2)
     dialog2.show()
+
+    showDialog {
+        title = "제목"
+        message = "메시지"
+        okButtonText = "확인"
+        okButtonHandler = { println("확인 버튼 클릭") }
+        cancelButtonText = "취소"
+        cancelButtonHandler = { println("취소 버튼 클릭") }
+    }
 }
