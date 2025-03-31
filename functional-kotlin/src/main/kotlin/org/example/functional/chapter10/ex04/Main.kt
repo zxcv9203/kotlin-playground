@@ -11,6 +11,14 @@ class Dialog {
         // ...
     }
 
+    fun okButton(init: Button.() -> Unit) {
+        okButton = Button().apply(init)
+    }
+
+    fun cancelButton(init: Button.() -> Unit) {
+        cancelButton = Button().apply(init)
+    }
+
     class Button {
         var message: String = ""
         var handler: () -> Unit = {}
@@ -23,19 +31,15 @@ fun showDialog(init: Dialog.() -> Unit): Dialog {
     return dialog
 }
 
-fun makeButton(init: Dialog.Button.() -> Unit): Dialog.Button {
-    return Dialog.Button().apply(init)
-}
-
 fun main() {
     showDialog {
         title = "제목"
         message = "메시지"
-        okButton = makeButton {
+        okButton {
             message = "확인"
             handler = { println("확인 버튼 클릭") }
         }
-        cancelButton = makeButton {
+        cancelButton {
             message = "취소"
             handler = { println("취소 버튼 클릭") }
         }
