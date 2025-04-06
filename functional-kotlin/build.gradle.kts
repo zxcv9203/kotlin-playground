@@ -8,7 +8,18 @@ version = "1.0-SNAPSHOT"
 repositories {
     mavenCentral()
 }
+kotlin {
+    sourceSets.all {
+        languageSettings.optIn("kotlin.ExperimentalStdlibApi")
+        languageSettings.enableLanguageFeature("ContextReceivers")
+    }
+}
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        freeCompilerArgs += "-Xcontext-receivers"
+    }
+}
 dependencies {
     // 코루틴 코어
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
