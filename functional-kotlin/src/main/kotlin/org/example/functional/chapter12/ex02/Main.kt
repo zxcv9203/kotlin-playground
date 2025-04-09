@@ -1,4 +1,4 @@
-package org.example.functional.chpater12.ex02
+package org.example.functional.chapter12.ex02
 
 class Foo {
     fun foo() {

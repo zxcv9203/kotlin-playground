@@ -1,4 +1,4 @@
-package org.example.functional.chpater12
+package org.example.functional.chapter12
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

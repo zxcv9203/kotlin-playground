@@ -1,4 +1,4 @@
-package org.example.functional.chpater12.ex04
+package org.example.functional.chapter12.ex04
 
 interface Foo {
     fun foo() {
