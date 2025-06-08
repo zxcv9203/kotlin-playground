@@ -11,6 +11,16 @@ class CafeKiosk(
         beverages.add(beverage)
     }
 
+    fun add(
+        beverage: Beverage,
+        quantity: Int,
+    ) {
+        if (quantity <= 0) {
+            throw IllegalArgumentException("음료는 1잔 이상 주문할 수 없습니다.")
+        }
+        repeat(quantity) { beverages.add(beverage) }
+    }
+
     fun remove(beverage: Beverage) {
         beverages.remove(beverage)
     }
