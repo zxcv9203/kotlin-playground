@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.example.practicetesting.practice.unit.beverage.Americano
 import org.example.practicetesting.practice.unit.beverage.Latte
+import java.time.LocalDateTime
 import kotlin.test.Test
 
 class CafeKioskTest {
@@ -67,5 +68,37 @@ class CafeKioskTest {
 
         cafeKiosk.clear()
         assertThat(cafeKiosk.beverages).isEmpty()
+    }
+
+    @Test
+    fun createOrder() {
+        val cafeKiosk = CafeKiosk()
+        cafeKiosk.add(Americano())
+
+        val order = cafeKiosk.createOrder()
+
+        assertThat(order.beverages).hasSize(1)
+        assertThat(order.beverages[0].name).isEqualTo("아메리카노")
+    }
+
+    @Test
+    fun createOrderWithTime() {
+        val cafeKiosk = CafeKiosk()
+        cafeKiosk.add(Americano())
+
+        val order = cafeKiosk.createOrder(LocalDateTime.of(2025, 1, 1, 12, 0))
+
+        assertThat(order.beverages).hasSize(1)
+        assertThat(order.beverages[0].name).isEqualTo("아메리카노")
+    }
+
+    @Test
+    fun createOrderWithOutSideOpenTime() {
+        val cafeKiosk = CafeKiosk()
+        cafeKiosk.add(Americano())
+
+        assertThatThrownBy { cafeKiosk.createOrder(LocalDateTime.of(2025, 1, 1, 9, 59)) }
+            .isInstanceOf(IllegalArgumentException::class.java)
+            .hasMessage("주문 시간이 아닙니다. 관리자에게 문의하세요.")
     }
 }
