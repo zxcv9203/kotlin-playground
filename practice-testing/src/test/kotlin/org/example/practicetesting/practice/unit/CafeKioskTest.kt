@@ -71,6 +71,17 @@ class CafeKioskTest {
     }
 
     @Test
+    fun calculateTotalPrice() {
+        val cafeKiosk = CafeKiosk()
+        cafeKiosk.add(Americano())
+        cafeKiosk.add(Latte())
+
+        val totalPrice = cafeKiosk.calculateTotalPrice()
+
+        assertThat(totalPrice).isEqualTo(8500)
+    }
+
+    @Test
     fun createOrder() {
         val cafeKiosk = CafeKiosk()
         cafeKiosk.add(Americano())
