@@ -7,6 +7,7 @@ import org.example.practicetesting.spring.domain.product.ProductType
 data class ProductResponse(
     val id: Long,
     val name: String,
+    val productNumber: String,
     val price: Int,
     val type: ProductType,
     val sellingStatus: ProductSellingStatus,
@@ -15,6 +16,7 @@ data class ProductResponse(
         fun of(product: Product): ProductResponse =
             ProductResponse(
                 id = product.id,
+                productNumber = product.productNumber,
                 name = product.name,
                 price = product.price,
                 type = product.type,
