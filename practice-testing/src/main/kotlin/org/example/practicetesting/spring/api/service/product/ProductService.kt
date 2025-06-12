@@ -1,6 +1,6 @@
-package org.example.practicetesting.spring.domain.api.service.product
+package org.example.practicetesting.spring.api.service.product
 
-import org.example.practicetesting.spring.domain.api.service.product.response.ProductResponse
+import org.example.practicetesting.spring.api.service.product.response.ProductResponse
 import org.example.practicetesting.spring.domain.product.ProductRepository
 import org.example.practicetesting.spring.domain.product.ProductSellingStatus
 import org.springframework.stereotype.Service

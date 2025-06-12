@@ -1,4 +1,4 @@
-package org.example.practicetesting.spring.domain.api.service.product.response
+package org.example.practicetesting.spring.api.service.product.response
 
 import org.example.practicetesting.spring.domain.product.Product
 import org.example.practicetesting.spring.domain.product.ProductSellingStatus
