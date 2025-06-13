@@ -4,6 +4,7 @@ import org.example.practicetesting.spring.api.controller.order.request.OrderCrea
 import org.example.practicetesting.spring.api.service.order.response.OrderResponse
 import org.example.practicetesting.spring.domain.order.Order
 import org.example.practicetesting.spring.domain.order.OrderRepository
+import org.example.practicetesting.spring.domain.product.Product
 import org.example.practicetesting.spring.domain.product.ProductRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -18,10 +19,21 @@ class OrderService(
         registeredDateTime: LocalDateTime,
     ): OrderResponse {
         val productNumbers = request.productNumbers
+        val duplicateProducts = findProductsBy(productNumbers)
+        val order = Order.create(duplicateProducts, registeredDateTime)
+        val savedOrder = orderRepository.save(order)
 
+        return OrderResponse.of(savedOrder)
+    }
+
+    private fun findProductsBy(productNumbers: List<String>): List<Product> {
         val products = productRepository.findAllByProductNumberIn(productNumbers)
-        val order = Order.create(products, registeredDateTime)
-        orderRepository.save(order)
-        return OrderResponse.of(order)
+        val productMap = products.associateBy { it.productNumber }
+
+        val duplicateProducts =
+            productNumbers
+                .map { it -> productMap[it] ?: throw IllegalArgumentException("상품번호 ${it}에 해당하는 상품이 존재하지 않습니다.") }
+                .toList()
+        return duplicateProducts
     }
 }
