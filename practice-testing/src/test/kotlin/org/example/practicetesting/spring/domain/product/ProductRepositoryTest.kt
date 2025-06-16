@@ -96,4 +96,47 @@ class ProductRepositoryTest {
                 tuple("002", "카페라떼", ProductSellingStatus.HOLD),
             )
     }
+
+    @Test
+    @DisplayName("가장 마지막 상품번호를 조회한다.")
+    fun findLatestProductNumber() {
+        val want = "003"
+        val product =
+            Product(
+                productNumber = "001",
+                type = ProductType.HANDMADE,
+                sellingStatus = ProductSellingStatus.SELLING,
+                name = "아메리카노",
+                price = 4000,
+            )
+        val product2 =
+            Product(
+                productNumber = "002",
+                type = ProductType.HANDMADE,
+                sellingStatus = ProductSellingStatus.HOLD,
+                name = "카페라떼",
+                price = 4500,
+            )
+        val product3 =
+            Product(
+                productNumber = want,
+                type = ProductType.HANDMADE,
+                sellingStatus = ProductSellingStatus.STOP_SELLING,
+                name = "팥빙수",
+                price = 7000,
+            )
+        productRepository.saveAll(listOf(product, product2, product3))
+
+        val got = productRepository.findLatestProductNumber()
+
+        assertThat(got).isEqualTo(want)
+    }
+
+    @Test
+    @DisplayName("상품이 하나도 없는 경우에는 null을 반환한다.")
+    fun findLatestProductNumberWhenProductIsEmpty() {
+        val got = productRepository.findLatestProductNumber()
+
+        assertThat(got).isNull()
+    }
 }
