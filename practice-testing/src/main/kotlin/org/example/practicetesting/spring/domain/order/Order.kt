@@ -31,10 +31,11 @@ class Order(
         fun create(
             products: List<Product>,
             registeredDateTime: LocalDateTime,
+            status: OrderStatus = OrderStatus.INIT,
         ): Order {
             val order =
                 Order(
-                    orderStatus = OrderStatus.INIT,
+                    orderStatus = status,
                     totalPrice = products.sumOf { it.price },
                     registeredDateTime = registeredDateTime,
                     orderProducts = mutableListOf(),
