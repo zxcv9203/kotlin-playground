@@ -16,6 +16,5 @@ class MailSendClient(
     ): Boolean {
         log.info("메일 전송")
         TODO()
-        return false
     }
 }
