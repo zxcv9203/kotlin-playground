@@ -8,10 +8,10 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyString
+import org.mockito.BDDMockito.given
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import kotlin.test.Test
 
@@ -29,19 +29,19 @@ class MailServiceTest {
     @Test
     @DisplayName("메일 전송 테스트")
     fun sendMail() {
-        `when`(
+        given(
             mailSendClient.sendEmail(
                 anyString(),
                 anyString(),
                 anyString(),
                 anyString(),
             ),
-        ).thenReturn(true)
-        `when`(
+        ).willReturn(true)
+        given(
             mailSendHistoryRepository.save(
                 any(MailSendHistory::class.java),
             ),
-        ).thenReturn(Mockito.mock(MailSendHistory::class.java))
+        ).willReturn(Mockito.mock(MailSendHistory::class.java))
 
         val result = mailService.sendMail("", "", "", "")
 
