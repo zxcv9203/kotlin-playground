@@ -1,7 +1,7 @@
 package org.example.practicetesting.spring.api.service.order
 
 import org.assertj.core.api.Assertions.assertThat
-import org.example.practicetesting.spring.client.MailSendClient
+import org.example.practicetesting.spring.IntegrationTestSupport
 import org.example.practicetesting.spring.domain.history.mail.MailSendHistoryRepository
 import org.example.practicetesting.spring.domain.order.Order
 import org.example.practicetesting.spring.domain.order.OrderRepository
@@ -16,13 +16,10 @@ import org.junit.jupiter.api.DisplayName
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.bean.override.mockito.MockitoBean
 import java.time.LocalDateTime
 import kotlin.test.Test
 
-@SpringBootTest
-class OrderStatisticsServiceTest {
+class OrderStatisticsServiceTest : IntegrationTestSupport() {
     @Autowired
     private lateinit var orderStatisticsService: OrderStatisticsService
 
@@ -37,9 +34,6 @@ class OrderStatisticsServiceTest {
 
     @Autowired
     private lateinit var orderProductRepository: OrderProductRepository
-
-    @MockitoBean
-    private lateinit var mailSendClient: MailSendClient
 
     @AfterEach
     fun tearDown() {

@@ -2,17 +2,20 @@ package org.example.practicetesting.spring.domain.product
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.tuple
+import org.example.practicetesting.spring.IntegrationTestSupport
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
-import org.springframework.test.context.ActiveProfiles
 import kotlin.test.Test
 
-@DataJpaTest
-@ActiveProfiles("test")
-class ProductRepositoryTest {
+class ProductRepositoryTest : IntegrationTestSupport() {
     @Autowired
     private lateinit var productRepository: ProductRepository
+
+    @AfterEach
+    fun tearDown() {
+        productRepository.deleteAllInBatch()
+    }
 
     @Test
     @DisplayName("원하는 판매상태를 가진 상품들을 조회한다.")

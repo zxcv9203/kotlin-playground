@@ -1,30 +1,15 @@
 package org.example.practicetesting.spring.api.controller.order
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import org.example.practicetesting.spring.ControllerTestSupport
 import org.example.practicetesting.spring.api.controller.order.request.OrderCreateRequest
-import org.example.practicetesting.spring.api.service.order.OrderService
 import org.junit.jupiter.api.DisplayName
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.test.context.bean.override.mockito.MockitoBean
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import kotlin.test.Test
 
-@WebMvcTest(controllers = [OrderController::class])
-class OrderControllerTest {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
-
-    @MockitoBean
-    private lateinit var orderService: OrderService
-
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
-
+class OrderControllerTest : ControllerTestSupport() {
     @Test
     @DisplayName("신규 주문을 등록한다.")
     fun createOrder() {

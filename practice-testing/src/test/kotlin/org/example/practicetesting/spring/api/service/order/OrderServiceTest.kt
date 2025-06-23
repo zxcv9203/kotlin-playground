@@ -3,6 +3,7 @@ package org.example.practicetesting.spring.api.service.order
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.assertj.core.api.Assertions.tuple
+import org.example.practicetesting.spring.IntegrationTestSupport
 import org.example.practicetesting.spring.api.controller.order.request.OrderCreateRequest
 import org.example.practicetesting.spring.domain.order.OrderRepository
 import org.example.practicetesting.spring.domain.orderproduct.OrderProductRepository
@@ -15,14 +16,10 @@ import org.example.practicetesting.spring.domain.stock.StockRepository
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
 import java.time.LocalDateTime
 import kotlin.test.Test
 
-@SpringBootTest
-@ActiveProfiles("test")
-class OrderServiceTest {
+class OrderServiceTest : IntegrationTestSupport() {
     @Autowired
     private lateinit var productRepository: ProductRepository
 

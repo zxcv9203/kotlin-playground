@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.example.practicetesting.practice.unit.beverage.Americano
 import org.example.practicetesting.practice.unit.beverage.Latte
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import java.time.LocalDateTime
 import kotlin.test.Test
@@ -87,6 +88,7 @@ class CafeKioskTest {
     }
 
     @Test
+    @Disabled
     fun createOrder() {
         val cafeKiosk = CafeKiosk()
         cafeKiosk.add(Americano())

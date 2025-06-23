@@ -1,17 +1,12 @@
 package org.example.practicetesting.spring.api.controller.product
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import org.example.practicetesting.spring.ControllerTestSupport
 import org.example.practicetesting.spring.api.controller.product.request.ProductCreateRequest
-import org.example.practicetesting.spring.api.service.product.ProductService
 import org.example.practicetesting.spring.domain.product.ProductSellingStatus
 import org.example.practicetesting.spring.domain.product.ProductType
 import org.junit.jupiter.api.DisplayName
 import org.mockito.Mockito.`when`
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
-import org.springframework.test.context.bean.override.mockito.MockitoBean
-import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
@@ -19,17 +14,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPat
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import kotlin.test.Test
 
-@WebMvcTest(controllers = [ProductController::class])
-class ProductControllerTest {
-    @Autowired
-    private lateinit var mockMvc: MockMvc
-
-    @MockitoBean
-    private lateinit var productService: ProductService
-
-    @Autowired
-    private lateinit var objectMapper: ObjectMapper
-
+class ProductControllerTest : ControllerTestSupport() {
     @Test
     @DisplayName("신규 상품을 등록한다.")
     fun createProduct() {
