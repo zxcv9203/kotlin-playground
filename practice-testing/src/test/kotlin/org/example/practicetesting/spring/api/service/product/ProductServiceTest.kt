@@ -8,6 +8,7 @@ import org.example.practicetesting.spring.domain.product.ProductRepository
 import org.example.practicetesting.spring.domain.product.ProductSellingStatus
 import org.example.practicetesting.spring.domain.product.ProductType
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -22,6 +23,14 @@ class ProductServiceTest {
 
     @Autowired
     private lateinit var productRepository: ProductRepository
+
+    @BeforeEach
+    fun setUp() {
+        // 다음 조건일때만 @BeforeEach를 사용합니다.
+
+        // 각 테스트 입장에서 봤을 때 아예 몰라도 테스트 내용을 이해하는데 문제가 없는 경우
+        // 수정해도 모든 테스트에 영향을 주지 않는 경우
+    }
 
     @AfterEach
     fun tearDown() {
