@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class ProductService(
+    private val productNumberFactory: ProductNumberFactory,
     private val productRepository: ProductRepository,
 ) {
     fun getSellingProducts(): List<ProductResponse> =
@@ -17,7 +18,7 @@ class ProductService(
             .map { ProductResponse.of(it) }
 
     fun createProduct(request: ProductCreateRequest): ProductResponse {
-        val nextProductNumber = createNextProductNumber()
+        val nextProductNumber = productNumberFactory.createNextProductNumber()
         val savedProduct =
             productRepository.save(
                 Product(
@@ -29,13 +30,5 @@ class ProductService(
                 ),
             )
         return ProductResponse.of(savedProduct)
-    }
-
-    private fun createNextProductNumber(): String {
-        val latestProductNumber =
-            productRepository.findLatestProductNumber()
-                ?: "000"
-        val nextNumber = latestProductNumber.toInt() + 1
-        return nextNumber.toString().padStart(3, '0')
     }
 }
