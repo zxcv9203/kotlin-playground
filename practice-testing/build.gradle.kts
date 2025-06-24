@@ -1,9 +1,12 @@
+import org.asciidoctor.gradle.jvm.AsciidoctorTask
+
 plugins {
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
     kotlin("plugin.jpa") version "1.9.25"
     id("org.springframework.boot") version "3.5.0"
     id("io.spring.dependency-management") version "1.1.7"
+    id("org.asciidoctor.jvm.convert") version "4.0.4"
 }
 
 group = "org.example"
@@ -29,6 +32,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     runtimeOnly("com.h2database:h2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
@@ -38,7 +42,18 @@ kotlin {
         freeCompilerArgs.addAll("-Xjsr305=strict")
     }
 }
+val snippetsDir = layout.buildDirectory.dir("generated-snippets")
 
-tasks.withType<Test> {
+tasks.test {
     useJUnitPlatform()
+    outputs.dir(snippetsDir)
+}
+
+tasks.named<AsciidoctorTask>("asciidoctor") {
+    inputs.dir(snippetsDir)
+
+    setSourceDir(file("src/docs/asciidoc"))
+    setOutputDir(file("build/docs/asciidoc"))
+
+    dependsOn("test")
 }
