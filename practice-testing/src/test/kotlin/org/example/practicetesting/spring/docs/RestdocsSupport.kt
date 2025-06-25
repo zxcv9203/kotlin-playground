@@ -1,0 +1,33 @@
+package org.example.practicetesting.spring.docs
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.restdocs.RestDocumentationContextProvider
+import org.springframework.restdocs.RestDocumentationExtension
+import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration
+import org.springframework.restdocs.operation.preprocess.Preprocessors
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import org.springframework.test.web.servlet.setup.StandaloneMockMvcBuilder
+
+@ExtendWith(RestDocumentationExtension::class)
+abstract class RestdocsSupport {
+    protected lateinit var mockMvc: MockMvc
+    protected val objectMapper: ObjectMapper = ObjectMapper()
+
+    @BeforeEach
+    fun setUp(provider: RestDocumentationContextProvider) {
+        this.mockMvc =
+            MockMvcBuilders
+                .standaloneSetup(initController())
+                .apply<StandaloneMockMvcBuilder>(
+                    documentationConfiguration(provider)
+                        .operationPreprocessors()
+                        .withRequestDefaults(Preprocessors.prettyPrint())
+                        .withResponseDefaults(Preprocessors.prettyPrint()),
+                ).build()
+    }
+
+    protected abstract fun initController(): Any
+}

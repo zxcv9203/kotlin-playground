@@ -1,4 +1,5 @@
 import org.asciidoctor.gradle.jvm.AsciidoctorTask
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     kotlin("jvm") version "1.9.25"
@@ -52,8 +53,17 @@ tasks.test {
 tasks.named<AsciidoctorTask>("asciidoctor") {
     inputs.dir(snippetsDir)
 
-    setSourceDir(file("src/docs/asciidoc"))
-    setOutputDir(file("build/docs/asciidoc"))
-
+    sources {
+        include("**/index.adoc")
+    }
+    baseDirFollowsSourceDir()
     dependsOn("test")
+}
+
+tasks.named<BootJar>("bootJar") {
+    dependsOn("asciidoctor")
+
+    from("build/docs/asciidoc") {
+        into("static/docs")
+    }
 }
