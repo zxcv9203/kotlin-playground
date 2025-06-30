@@ -15,8 +15,7 @@
     {
         "email": "string",
         "password": "string",
-        "name": "string",
-        "phoneNumber": "string"
+        "username": "string"
     }
     ```
 - curl 예시
