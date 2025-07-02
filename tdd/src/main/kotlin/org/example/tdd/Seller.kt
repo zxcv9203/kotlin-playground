@@ -14,6 +14,8 @@ class Seller(
     val username: String,
     @Column(name = "email", nullable = false, unique = true)
     val email: String,
+    @Column(name = "hashed_password", nullable = false, length = 1000)
+    val hashedPassword: String,
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,

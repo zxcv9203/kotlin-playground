@@ -1,6 +1,7 @@
 package org.example.tdd.api.seller.signup
 
 import org.assertj.core.api.Assertions.assertThat
+import org.example.tdd.SellerRepository
 import org.example.tdd.TddApplication
 import org.example.tdd.command.CreateSellerCommand
 import org.junit.jupiter.api.DisplayName
@@ -14,6 +15,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.security.crypto.password.PasswordEncoder
 import kotlin.test.Test
 
 @SpringBootTest(
@@ -47,12 +49,11 @@ class PostSpecs {
     ) {
         // Arrange
         val command =
-            """
-            {
-                "password": "password",
-                "username": ${UsernameGenerator.generate()}
-            }
-            """.trimIndent()
+            CreateSellerCommand(
+                email = null,
+                password = "password",
+                username = UsernameGenerator.generate(),
+            )
         val headers =
             HttpHeaders()
                 .apply { contentType = MediaType.APPLICATION_JSON }
@@ -100,12 +101,11 @@ class PostSpecs {
     ) {
         // Arrange
         val command =
-            """
-            {
-                "email": ${EmailGenerator.generateEmail()},
-                "password": "password"
-            }
-            """.trimIndent()
+            CreateSellerCommand(
+                email = EmailGenerator.generateEmail(),
+                password = "password",
+                username = null,
+            )
 
         val headers =
             HttpHeaders()
@@ -183,12 +183,11 @@ class PostSpecs {
     ) {
         // Arrange
         val command =
-            """
-            {
-                "email": ${EmailGenerator.generateEmail()},
-                "username": ${UsernameGenerator.generate()}
-            }
-            """.trimIndent()
+            CreateSellerCommand(
+                email = EmailGenerator.generateEmail(),
+                password = null,
+                username = UsernameGenerator.generate(),
+            )
         val headers =
             HttpHeaders()
                 .apply { contentType = MediaType.APPLICATION_JSON }
@@ -286,5 +285,35 @@ class PostSpecs {
 
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun `비밀번호를 올바르게 암호화한다`(
+        @Autowired client: TestRestTemplate,
+        @Autowired sellerRepository: SellerRepository,
+        @Autowired passwordEncoder: PasswordEncoder,
+    ) {
+        // Arrange
+        val password = PasswordGenerator.generate()
+        val command =
+            CreateSellerCommand(
+                email = EmailGenerator.generateEmail(),
+                password = password,
+                username = UsernameGenerator.generate(),
+            )
+
+        // Act
+        val response = client.postForEntity<Unit>("/seller/signup", command, Unit::class)
+
+        // Assert
+        val seller =
+            sellerRepository
+                .findAll()
+                .find { it.email == command.email }
+                ?: throw IllegalStateException("Seller not found with email: ${command.email}")
+
+        val actual = seller.hashedPassword
+        assertThat(actual).isNotNull
+        assertThat(passwordEncoder.matches(command.password, actual)).isTrue
     }
 }
