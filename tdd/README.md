@@ -47,7 +47,7 @@
 - [x] email 속성이 올바른 형식을 따르지 않으면 400 Bad Request 상태 코드르 반환한다.
 - [x] username 속성이 지정되지 않으면 400 Bad Request 상태 코드를 반환한다.
 - [x] username 속성이 올바른 형식을 따르지 않으면 400 Bad Request 상태 코드를 반환한다.
-- [ ] username 속성이 올바른 형식을 따르면 204 No Content 상태 코드를 반환한다.
+- [x] username 속성이 올바른 형식을 따르면 204 No Content 상태 코드를 반환한다.
 - [ ] password 속성이 지정되지 않으면 400 Bad Request 상태 코드를 반환한다.
 - [ ] password 속성이 올바른 형식을 따르지 않으면 400 Bad Request 상태 코드를 반환한다.
 - [ ] email 속성에 이미 중복되는 이메일 주소가 지정되면 400 Bad Request 상태 코드를 반환한다.
