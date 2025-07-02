@@ -6,26 +6,29 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
+private const val EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$"
+private const val USERNAME_REGEX = "^[a-zA-Z0-9_-]{3,}$"
+
 @RestController
 class SellerSignupController {
     @PostMapping("/seller/signup")
     fun signup(
         @RequestBody command: CreateSellerCommand,
     ): ResponseEntity<Unit> {
-        val emailRegex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")
-        val usernameRegex = Regex("^[a-zA-Z0-9_-]*$")
-        return if (!command.email.matches(emailRegex)) {
-            ResponseEntity.badRequest().build()
-        } else if (command.username.isBlank()) {
-            ResponseEntity.badRequest().build()
-        } else if (command.username.length < 3) {
-            ResponseEntity.badRequest().build()
-        } else if (!command.username.matches(usernameRegex)) {
-            ResponseEntity.badRequest().build()
-        } else if (command.password.length < 8) {
-            ResponseEntity.badRequest().build()
-        } else {
-            ResponseEntity.noContent().build()
+        if (!isCommandValid(command)) {
+            return ResponseEntity.badRequest().build()
         }
+        return ResponseEntity.noContent().build()
     }
+
+    private fun isCommandValid(command: CreateSellerCommand): Boolean =
+        isEmailValid(command.email) &&
+            isUsernameValid(command.username) &&
+            isPasswordValid(command.password)
+
+    private fun isPasswordValid(password: String): Boolean = password.length >= 8
+
+    private fun isUsernameValid(username: String): Boolean = username.matches(Regex(USERNAME_REGEX))
+
+    private fun isEmailValid(email: String): Boolean = email.matches(Regex(EMAIL_REGEX))
 }
