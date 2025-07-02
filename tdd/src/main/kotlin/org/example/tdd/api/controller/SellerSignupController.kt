@@ -22,6 +22,8 @@ class SellerSignupController {
             ResponseEntity.badRequest().build()
         } else if (!command.username.matches(usernameRegex)) {
             ResponseEntity.badRequest().build()
+        } else if (command.password.length < 8) {
+            ResponseEntity.badRequest().build()
         } else {
             ResponseEntity.noContent().build()
         }
