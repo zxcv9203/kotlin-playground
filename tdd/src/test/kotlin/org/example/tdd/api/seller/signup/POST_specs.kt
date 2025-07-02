@@ -4,6 +4,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.example.tdd.TddApplication
 import org.example.tdd.command.CreateSellerCommand
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
@@ -58,6 +60,35 @@ class PostSpecs {
 
         // Act
         val response = client.postForEntity<Unit>("/seller/signup", request, Unit::class)
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "invalid-email",
+            "invalid-email@",
+            "invalid-email@test",
+            "invalid@test.",
+            "invalid@.com",
+        ],
+    )
+    fun `email 속성이 올바른 형식을 따르지 않으면 400 Bad Request 상태 코드르 반환한다`(
+        email: String,
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val command =
+            CreateSellerCommand(
+                email = email,
+                password = "password",
+                username = "seller",
+            )
+
+        // Act
+        val response = client.postForEntity<Unit>("/seller/signup", command, Unit::class)
 
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
