@@ -93,4 +93,58 @@ class PostSpecs {
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
+
+    @Test
+    fun `username 속성이 지정되지 않으면 400 Bad Request 상태 코드를 반환한다`(
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val command =
+            """
+            {
+                "email": "seller@test.com",
+                "password": "password"
+            }
+            """.trimIndent()
+
+        val headers =
+            HttpHeaders()
+                .apply { contentType = MediaType.APPLICATION_JSON }
+        val request = HttpEntity(command, headers)
+
+        // Act
+        val response = client.postForEntity<Unit>("/seller/signup", request, Unit::class)
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "",
+            "se",
+            "seller ",
+            "seller.",
+            "seller@",
+        ],
+    )
+    fun `username 속성이 올바른 형식을 따르지 않으면 400 Bad Request 상태 코드를 반환한다`(
+        username: String,
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val command =
+            CreateSellerCommand(
+                email = "seller@test.com",
+                password = "password",
+                username = username,
+            )
+
+        // Act
+        val response = client.postForEntity<Unit>("/seller/signup", command, Unit::class)
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
 }

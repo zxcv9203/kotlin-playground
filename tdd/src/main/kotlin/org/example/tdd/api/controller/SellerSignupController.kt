@@ -13,9 +13,14 @@ class SellerSignupController {
         @RequestBody command: CreateSellerCommand,
     ): ResponseEntity<Unit> {
         val emailRegex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")
-        return if (command.email.isBlank()) {
+        val usernameRegex = Regex("^[a-z]*$")
+        return if (!command.email.matches(emailRegex)) {
             ResponseEntity.badRequest().build()
-        } else if (!command.email.matches(emailRegex)) {
+        } else if (command.username.isBlank()) {
+            ResponseEntity.badRequest().build()
+        } else if (command.username.length < 3) {
+            ResponseEntity.badRequest().build()
+        } else if (!command.username.matches(usernameRegex)) {
             ResponseEntity.badRequest().build()
         } else {
             ResponseEntity.noContent().build()
