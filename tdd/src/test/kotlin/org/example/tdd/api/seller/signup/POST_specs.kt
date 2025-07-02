@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.client.postForEntity
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import kotlin.test.Test
 
 @SpringBootTest(
@@ -34,5 +37,29 @@ class PostSpecs {
 
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
+    }
+
+    @Test
+    fun `email 속성이 지정되지 않으면 400 Bad Request 상태 코드를 반환한다`(
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val command =
+            """
+            {
+                "password": "password",
+                "username": "seller"
+            }
+            """.trimIndent()
+        val headers =
+            HttpHeaders()
+                .apply { contentType = MediaType.APPLICATION_JSON }
+        val request = HttpEntity(command, headers)
+
+        // Act
+        val response = client.postForEntity<Unit>("/seller/signup", request, Unit::class)
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
 }
