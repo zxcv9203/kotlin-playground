@@ -10,6 +10,8 @@ import jakarta.persistence.Table
 @Entity
 @Table(name = "seller")
 class Seller(
+    @Column(name = "username", nullable = false, unique = true)
+    val username: String,
     @Column(name = "email", nullable = false, unique = true)
     val email: String,
     @Id

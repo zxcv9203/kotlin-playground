@@ -26,6 +26,7 @@ class SellerSignupController(
         val seller =
             Seller(
                 email = command.email,
+                username = command.username,
             )
         try {
             sellerRepository.save(seller)

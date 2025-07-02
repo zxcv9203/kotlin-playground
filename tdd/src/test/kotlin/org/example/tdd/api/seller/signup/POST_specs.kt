@@ -31,7 +31,7 @@ class PostSpecs {
             CreateSellerCommand(
                 email = EmailGenerator.generateEmail(),
                 password = "password",
-                username = "seller",
+                username = UsernameGenerator.generate(),
             )
 
         // Act
@@ -50,7 +50,7 @@ class PostSpecs {
             """
             {
                 "password": "password",
-                "username": "seller"
+                "username": ${UsernameGenerator.generate()}
             }
             """.trimIndent()
         val headers =
@@ -84,7 +84,7 @@ class PostSpecs {
             CreateSellerCommand(
                 email = email,
                 password = "password",
-                username = "seller",
+                username = UsernameGenerator.generate(),
             )
 
         // Act
@@ -186,7 +186,7 @@ class PostSpecs {
             """
             {
                 "email": ${EmailGenerator.generateEmail()},
-                "username": "seller"
+                "username": ${UsernameGenerator.generate()}
             }
             """.trimIndent()
         val headers =
@@ -216,7 +216,7 @@ class PostSpecs {
             CreateSellerCommand(
                 email = EmailGenerator.generateEmail(),
                 password = password,
-                username = "seller",
+                username = UsernameGenerator.generate(),
             )
         // Act
         val response = client.postForEntity<Unit>("/seller/signup", command, Unit::class)
@@ -235,7 +235,7 @@ class PostSpecs {
             CreateSellerCommand(
                 email = email,
                 password = "password",
-                username = "seller1",
+                username = UsernameGenerator.generate(),
             ),
             Unit::class,
         )
@@ -247,7 +247,39 @@ class PostSpecs {
                 CreateSellerCommand(
                     email = email,
                     password = "password",
-                    username = "seller2",
+                    username = UsernameGenerator.generate(),
+                ),
+                Unit::class,
+            )
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun `username 속성에 이미 중복되는 사용자 이름이 지정되면 400 Bad Request 상태 코드를 반환한다`(
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val username = UsernameGenerator.generate()
+        client.postForEntity<Unit>(
+            "/seller/signup",
+            CreateSellerCommand(
+                email = EmailGenerator.generateEmail(),
+                password = "password",
+                username = username,
+            ),
+            Unit::class,
+        )
+
+        // Act
+        val response =
+            client.postForEntity<Unit>(
+                "/seller/signup",
+                CreateSellerCommand(
+                    email = EmailGenerator.generateEmail(),
+                    password = "password",
+                    username = username,
                 ),
                 Unit::class,
             )
