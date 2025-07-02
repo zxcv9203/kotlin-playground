@@ -1,6 +1,9 @@
 package org.example.tdd.api.controller
 
+import org.example.tdd.Seller
+import org.example.tdd.SellerRepository
 import org.example.tdd.command.CreateSellerCommand
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -10,12 +13,23 @@ private const val EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,
 private const val USERNAME_REGEX = "^[a-zA-Z0-9_-]{3,}$"
 
 @RestController
-class SellerSignupController {
+class SellerSignupController(
+    private val sellerRepository: SellerRepository,
+) {
     @PostMapping("/seller/signup")
     fun signup(
         @RequestBody command: CreateSellerCommand,
     ): ResponseEntity<Unit> {
         if (!isCommandValid(command)) {
+            return ResponseEntity.badRequest().build()
+        }
+        val seller =
+            Seller(
+                email = command.email,
+            )
+        try {
+            sellerRepository.save(seller)
+        } catch (e: DataIntegrityViolationException) {
             return ResponseEntity.badRequest().build()
         }
         return ResponseEntity.noContent().build()

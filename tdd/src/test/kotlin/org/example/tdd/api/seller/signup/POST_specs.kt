@@ -223,4 +223,36 @@ class PostSpecs {
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
+
+    @Test
+    fun `email 속성에 이미 중복되는 이메일 주소가 지정되면 400 Bad Request 상태 코드를 반환한다`(
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val email = "seller@test.com"
+        client.postForEntity<Unit>(
+            "/seller/signup",
+            CreateSellerCommand(
+                email = email,
+                password = "password",
+                username = "seller1",
+            ),
+            Unit::class,
+        )
+
+        // Act
+        val response =
+            client.postForEntity<Unit>(
+                "/seller/signup",
+                CreateSellerCommand(
+                    email = email,
+                    password = "password",
+                    username = "seller2",
+                ),
+                Unit::class,
+            )
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
 }
