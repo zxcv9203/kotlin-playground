@@ -29,7 +29,7 @@ class PostSpecs {
         // Arrange
         val command =
             CreateSellerCommand(
-                email = "seller@test.com",
+                email = EmailGenerator.generateEmail(),
                 password = "password",
                 username = "seller",
             )
@@ -102,7 +102,7 @@ class PostSpecs {
         val command =
             """
             {
-                "email": "seller@test.com",
+                "email": ${EmailGenerator.generateEmail()},
                 "password": "password"
             }
             """.trimIndent()
@@ -136,7 +136,7 @@ class PostSpecs {
         // Arrange
         val command =
             CreateSellerCommand(
-                email = "seller@test.com",
+                email = EmailGenerator.generateEmail(),
                 password = "password",
                 username = username,
             )
@@ -165,7 +165,7 @@ class PostSpecs {
         // Arrange
         val command =
             CreateSellerCommand(
-                email = "seller@test.com",
+                email = EmailGenerator.generateEmail(),
                 password = "password",
                 username = username,
             )
@@ -185,7 +185,7 @@ class PostSpecs {
         val command =
             """
             {
-                "email": "seller@test.com
+                "email": ${EmailGenerator.generateEmail()},
                 "username": "seller"
             }
             """.trimIndent()
@@ -214,7 +214,7 @@ class PostSpecs {
         // Arrange
         val command =
             CreateSellerCommand(
-                email = "seller@test.com",
+                email = EmailGenerator.generateEmail(),
                 password = password,
                 username = "seller",
             )
