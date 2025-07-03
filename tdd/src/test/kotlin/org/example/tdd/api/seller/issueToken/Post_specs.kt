@@ -2,6 +2,7 @@ package org.example.tdd.api.seller.issueToken
 
 import org.assertj.core.api.Assertions.assertThat
 import org.example.tdd.TddApplication
+import org.example.tdd.api.JwtAssertions
 import org.example.tdd.api.seller.signup.EmailGenerator
 import org.example.tdd.api.seller.signup.PasswordGenerator
 import org.example.tdd.api.seller.signup.UsernameGenerator
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.client.postForEntity
 import org.springframework.http.HttpStatus
+import java.util.*
 import kotlin.test.Test
 
 @SpringBootTest(
@@ -84,5 +86,37 @@ class PostSpecs {
         // Assert
         assertThat(response.body).isNotNull
         assertThat(response.body?.accessToken).isNotNull
+    }
+
+    @Test
+    fun `접근 토큰은 JWT 형식을 따른다`(
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val email = EmailGenerator.generateEmail()
+        val password = PasswordGenerator.generate()
+
+        client.postForEntity<Unit>(
+            "/seller/signup",
+            CreateSellerCommand(
+                email = email,
+                username = UsernameGenerator.generate(),
+                password = password,
+            ),
+            Unit::class,
+        )
+        // Act
+        val response =
+            client.postForEntity<AccessTokenCarrier>(
+                "/seller/issueToken",
+                IssueSellerToken(
+                    email = email,
+                    password = password,
+                ),
+                AccessTokenCarrier::class,
+            )
+        // Assert
+        val actual = response.body?.accessToken
+        assertThat(actual).satisfies(JwtAssertions.conformsToJwtFormat())
     }
 }
