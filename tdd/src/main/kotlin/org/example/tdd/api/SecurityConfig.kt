@@ -16,6 +16,11 @@ class SecurityConfig {
     fun securityFilterChain(http: HttpSecurity): DefaultSecurityFilterChain =
         http
             .csrf { it.disable() }
-            .authorizeHttpRequests { it.requestMatchers("/seller/signup").permitAll() }
-            .build()
+            .authorizeHttpRequests {
+                it
+                    .requestMatchers(
+                        "/seller/signup",
+                        "/seller/issueToken",
+                    ).permitAll()
+            }.build()
 }
