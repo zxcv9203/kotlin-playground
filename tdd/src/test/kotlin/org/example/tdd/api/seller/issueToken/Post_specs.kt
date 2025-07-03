@@ -53,4 +53,36 @@ class PostSpecs {
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
     }
+
+    @Test
+    fun `올바르게 요청하면 접근 토큰을 반환한다`(
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val email = EmailGenerator.generateEmail()
+        val password = PasswordGenerator.generate()
+
+        client.postForEntity<Unit>(
+            "/seller/signup",
+            CreateSellerCommand(
+                email = email,
+                username = UsernameGenerator.generate(),
+                password = password,
+            ),
+            Unit::class,
+        )
+        // Act
+        val response =
+            client.postForEntity<AccessTokenCarrier>(
+                "/seller/issueToken",
+                IssueSellerToken(
+                    email = email,
+                    password = password,
+                ),
+                AccessTokenCarrier::class,
+            )
+        // Assert
+        assertThat(response.body).isNotNull
+        assertThat(response.body?.accessToken).isNotNull
+    }
 }
