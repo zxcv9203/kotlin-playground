@@ -2,13 +2,12 @@ package org.example.tdd.api.seller.signup
 
 import org.assertj.core.api.Assertions.assertThat
 import org.example.tdd.SellerRepository
-import org.example.tdd.TddApplication
+import org.example.tdd.api.CommerceApiTest
 import org.example.tdd.command.CreateSellerCommand
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.client.postForEntity
 import org.springframework.http.HttpEntity
@@ -18,10 +17,7 @@ import org.springframework.http.MediaType
 import org.springframework.security.crypto.password.PasswordEncoder
 import kotlin.test.Test
 
-@SpringBootTest(
-    classes = [TddApplication::class],
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-)
+@CommerceApiTest
 @DisplayName("POST /seller/signup")
 class PostSpecs {
     @Test

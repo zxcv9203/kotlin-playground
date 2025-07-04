@@ -1,7 +1,7 @@
 package org.example.tdd.api.seller.issueToken
 
 import org.assertj.core.api.Assertions.assertThat
-import org.example.tdd.TddApplication
+import org.example.tdd.api.CommerceApiTest
 import org.example.tdd.api.JwtAssertions
 import org.example.tdd.api.seller.signup.EmailGenerator
 import org.example.tdd.api.seller.signup.PasswordGenerator
@@ -11,16 +11,12 @@ import org.example.tdd.query.IssueSellerToken
 import org.example.tdd.result.AccessTokenCarrier
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.client.postForEntity
 import org.springframework.http.HttpStatus
 import kotlin.test.Test
 
-@SpringBootTest(
-    classes = [TddApplication::class],
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-)
+@CommerceApiTest
 @DisplayName("POST /seller/issueToken")
 class PostSpecs {
     @Test
