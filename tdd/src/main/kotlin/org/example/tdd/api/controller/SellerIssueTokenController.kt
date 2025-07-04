@@ -6,6 +6,7 @@ import org.example.tdd.query.IssueSellerToken
 import org.example.tdd.result.AccessTokenCarrier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -16,18 +17,19 @@ class SellerIssueTokenController(
     @Value("\${security.jwt.secret}")
     private val jwtSecret: String,
     private val sellerRepository: SellerRepository,
+    private val passwordEncoder: PasswordEncoder,
 ) {
     @PostMapping("/seller/issueToken")
     fun issueToken(
         @RequestBody query: IssueSellerToken,
-    ): ResponseEntity<AccessTokenCarrier> {
+    ): ResponseEntity<AccessTokenCarrier> =
         sellerRepository
             .findByEmail(query.email)
-            ?: return ResponseEntity.badRequest().build()
-
-        return AccessTokenCarrier(composeToken())
-            .let { ResponseEntity.ok(it) }
-    }
+            ?.takeIf { passwordEncoder.matches(query.password, it.hashedPassword) }
+            ?.let { composeToken() }
+            ?.let { AccessTokenCarrier(it) }
+            ?.let { ResponseEntity.ok(it) }
+            ?: ResponseEntity.badRequest().build()
 
     private fun composeToken(): String =
         Jwts
