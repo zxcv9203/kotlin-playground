@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.client.postForEntity
 import org.springframework.http.HttpStatus
-import java.util.*
 import kotlin.test.Test
 
 @SpringBootTest(
@@ -118,5 +117,28 @@ class PostSpecs {
         // Assert
         val actual = response.body?.accessToken
         assertThat(actual).satisfies(JwtAssertions.conformsToJwtFormat())
+    }
+
+    @Test
+    fun `존재하지 않는 이메일 주소가 사용되면 400 Bad Request 상태코드를 반환한다`(
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val email = EmailGenerator.generateEmail()
+        val password = PasswordGenerator.generate()
+
+        // Act
+        val response =
+            client.postForEntity<Unit>(
+                "/seller/issueToken",
+                IssueSellerToken(
+                    email = email,
+                    password = password,
+                ),
+                Unit::class,
+            )
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
 }
