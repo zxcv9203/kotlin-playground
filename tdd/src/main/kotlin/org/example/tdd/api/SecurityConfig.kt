@@ -21,6 +21,7 @@ class SecurityConfig {
                     .requestMatchers(
                         "/seller/signup",
                         "/seller/issueToken",
+                        "/shopper/signup",
                     ).permitAll()
             }.build()
 }
