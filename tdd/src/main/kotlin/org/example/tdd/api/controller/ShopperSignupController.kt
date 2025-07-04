@@ -1,5 +1,6 @@
 package org.example.tdd.api.controller
 
+import org.example.tdd.UserPropertyValidator
 import org.example.tdd.command.CreateShopperCommand
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -21,5 +22,5 @@ class ShopperSignupController {
             .build()
     }
 
-    private fun isCommandValid(command: CreateShopperCommand): Boolean = command.email != null
+    private fun isCommandValid(command: CreateShopperCommand): Boolean = UserPropertyValidator.isEmailValid(command.email)
 }
