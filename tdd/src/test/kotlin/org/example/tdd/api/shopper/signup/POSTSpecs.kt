@@ -132,4 +132,33 @@ class POSTSpecs {
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "abcdefghijklmnopqrstuvwxyz",
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+            "0123456789",
+            "shopper_123",
+            "shopper-123",
+        ],
+    )
+    fun `username 속성이 올바른 형식을 따르면 204 No Content 상태코드를 반환한다`(
+        username: String,
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val command =
+            CreateShopperCommand(
+                email = EmailGenerator.generateEmail(),
+                password = PasswordGenerator.generate(),
+                username = username,
+            )
+
+        // Act
+        val response = client.postForEntity<Unit>("/shopper/signup", command, Unit::class)
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
+    }
 }
