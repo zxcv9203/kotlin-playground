@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
-private const val USERNAME_REGEX = "^[a-zA-Z0-9_-]{3,}$"
-
 @RestController
 class SellerSignupController(
     private val sellerRepository: SellerRepository,
@@ -41,10 +39,8 @@ class SellerSignupController(
 
     private fun isCommandValid(command: CreateSellerCommand): Boolean =
         UserPropertyValidator.isEmailValid(command.email) &&
-            isUsernameValid(command.username) &&
+            UserPropertyValidator.isUsernameValid(command.username) &&
             isPasswordValid(command.password)
 
     private fun isPasswordValid(password: String?): Boolean = password != null && password.length >= 8
-
-    private fun isUsernameValid(username: String?): Boolean = username != null && username.matches(Regex(USERNAME_REGEX))
 }

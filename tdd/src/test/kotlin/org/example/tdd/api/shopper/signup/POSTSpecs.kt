@@ -103,4 +103,33 @@ class POSTSpecs {
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "",
+            "sh",
+            "shopper.",
+            "shopper!",
+            "shopper@",
+        ],
+    )
+    fun `username 속성이 올바른 형식을 따르지 않으면 400 Bad Request 상태코드를 반환한다`(
+        username: String,
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val command =
+            CreateShopperCommand(
+                email = EmailGenerator.generateEmail(),
+                password = PasswordGenerator.generate(),
+                username = username,
+            )
+
+        // Act
+        val response = client.postForEntity<Unit>("/shopper/signup", command, Unit::class)
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
 }

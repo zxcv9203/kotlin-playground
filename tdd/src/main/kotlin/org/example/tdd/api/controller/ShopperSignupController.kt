@@ -24,5 +24,5 @@ class ShopperSignupController {
 
     private fun isCommandValid(command: CreateShopperCommand): Boolean =
         UserPropertyValidator.isEmailValid(command.email) &&
-            command.username != null
+            UserPropertyValidator.isUsernameValid(command.username)
 }
