@@ -202,4 +202,40 @@ class POSTSpecs {
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
+
+    @Test
+    fun `email 속성에 이미 존재하는 이메일 주소가 지정되면 400 Bad Request 상태코드를 반환한다`(
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val email = EmailGenerator.generateEmail()
+        val password = PasswordGenerator.generate()
+        val username = UsernameGenerator.generate()
+
+        // First signup
+        client.postForEntity<Unit>(
+            "/shopper/signup",
+            CreateShopperCommand(
+                email = email,
+                password = password,
+                username = username,
+            ),
+            Unit::class,
+        )
+
+        // Act
+        val response =
+            client.postForEntity<Unit>(
+                "/shopper/signup",
+                CreateShopperCommand(
+                    email = email,
+                    password = PasswordGenerator.generate(),
+                    username = UsernameGenerator.generate(),
+                ),
+                Unit::class,
+            )
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
 }

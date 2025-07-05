@@ -1,5 +1,7 @@
 package org.example.tdd.api.controller
 
+import org.example.tdd.Shopper
+import org.example.tdd.ShopperRepository
 import org.example.tdd.UserPropertyValidator
 import org.example.tdd.command.CreateShopperCommand
 import org.springframework.http.HttpStatus
@@ -9,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class ShopperSignupController {
+class ShopperSignupController(
+    private val shopperRepository: ShopperRepository,
+) {
     @PostMapping("/shopper/signup")
     fun signup(
         @RequestBody command: CreateShopperCommand,
@@ -17,6 +21,11 @@ class ShopperSignupController {
         if (!isCommandValid(command)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         }
+        val shopper =
+            Shopper(
+                email = command.email!!,
+            )
+        shopperRepository.save(shopper)
         return ResponseEntity
             .status(HttpStatus.NO_CONTENT)
             .build()

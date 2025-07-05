@@ -4,7 +4,6 @@ import org.example.tdd.Seller
 import org.example.tdd.SellerRepository
 import org.example.tdd.UserPropertyValidator
 import org.example.tdd.command.CreateSellerCommand
-import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.http.ResponseEntity
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
@@ -29,11 +28,7 @@ class SellerSignupController(
                 username = command.username!!,
                 hashedPassword = passwordEncoder.encode(command.password),
             )
-        try {
-            sellerRepository.save(seller)
-        } catch (e: DataIntegrityViolationException) {
-            return ResponseEntity.badRequest().build()
-        }
+        sellerRepository.save(seller)
         return ResponseEntity.noContent().build()
     }
 
