@@ -6,6 +6,7 @@ import org.example.tdd.api.CommerceApiTest
 import org.example.tdd.command.CreateSellerCommand
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.web.client.TestRestTemplate
@@ -195,13 +196,7 @@ class PostSpecs {
     }
 
     @ParameterizedTest
-    @ValueSource(
-        strings = [
-            "",
-            "pass",
-            "1234567",
-        ],
-    )
+    @MethodSource("org.example.tdd.TestDataSource#invalidPasswords")
     fun `password 속성이 올바른 형식을 따르지 않으면 400 Bad Request 상태 코드를 반환한다`(
         password: String,
         @Autowired client: TestRestTemplate,

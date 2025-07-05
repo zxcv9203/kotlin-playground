@@ -8,6 +8,7 @@ import org.example.tdd.api.seller.signup.UsernameGenerator
 import org.example.tdd.command.CreateShopperCommand
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.MethodSource
 import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.web.client.TestRestTemplate
@@ -171,6 +172,27 @@ class POSTSpecs {
             CreateShopperCommand(
                 email = EmailGenerator.generateEmail(),
                 password = null,
+                username = UsernameGenerator.generate(),
+            )
+
+        // Act
+        val response = client.postForEntity<Unit>("/shopper/signup", command, Unit::class)
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @ParameterizedTest
+    @MethodSource("org.example.tdd.TestDataSource#invalidPasswords")
+    fun `password 속성이 올바른 형식을 따르지 않으면 400 Bad Request 상태코드를 반환한다`(
+        password: String,
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val command =
+            CreateShopperCommand(
+                email = EmailGenerator.generateEmail(),
+                password = password,
                 username = UsernameGenerator.generate(),
             )
 

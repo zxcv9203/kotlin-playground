@@ -40,7 +40,5 @@ class SellerSignupController(
     private fun isCommandValid(command: CreateSellerCommand): Boolean =
         UserPropertyValidator.isEmailValid(command.email) &&
             UserPropertyValidator.isUsernameValid(command.username) &&
-            isPasswordValid(command.password)
-
-    private fun isPasswordValid(password: String?): Boolean = password != null && password.length >= 8
+            UserPropertyValidator.isPasswordValid(command.password)
 }
