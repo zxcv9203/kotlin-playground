@@ -12,6 +12,8 @@ class Shopper(
     val email: String,
     @Column(unique = true)
     val username: String,
+    @Column(name = "hashed_password", nullable = false, length = 1000)
+    val hashedPassword: String,
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val dataKey: Long = 0L,

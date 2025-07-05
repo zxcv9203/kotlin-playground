@@ -1,6 +1,7 @@
 package org.example.tdd.api.shopper.signup
 
 import org.assertj.core.api.Assertions.assertThat
+import org.example.tdd.ShopperRepository
 import org.example.tdd.api.CommerceApiTest
 import org.example.tdd.api.seller.signup.EmailGenerator
 import org.example.tdd.api.seller.signup.PasswordGenerator
@@ -14,11 +15,18 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.client.postForEntity
 import org.springframework.http.HttpStatus
+import org.springframework.security.crypto.password.PasswordEncoder
 import kotlin.test.Test
 
 @CommerceApiTest
 @DisplayName("/shopper/signup")
 class POSTSpecs {
+    @Autowired
+    private lateinit var shopperRepository: ShopperRepository
+
+    @Autowired
+    private lateinit var passwordEncoder: PasswordEncoder
+
     @Test
     fun `올바르게 요청하면 204 No Content 상태코드를 반환한다`(
         @Autowired client: TestRestTemplate,
@@ -273,5 +281,37 @@ class POSTSpecs {
 
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun `비밀번호를 올바르게 암호화한다`(
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val email = EmailGenerator.generateEmail()
+        val password = PasswordGenerator.generate()
+        val username = UsernameGenerator.generate()
+
+        // Act
+        val response =
+            client.postForEntity<Unit>(
+                "/shopper/signup",
+                CreateShopperCommand(
+                    email = email,
+                    password = password,
+                    username = username,
+                ),
+                Unit::class,
+            )
+
+        // Assert
+        val shopper = (
+            shopperRepository
+                .findAll()
+                .find { x -> x.email == email }
+                ?: error("Shopper with email $email not found")
+        )
+        val actual = shopper.hashedPassword
+        assertThat(passwordEncoder.matches(password, actual)).isTrue
     }
 }
