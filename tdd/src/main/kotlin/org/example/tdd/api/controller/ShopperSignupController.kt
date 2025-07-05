@@ -24,6 +24,7 @@ class ShopperSignupController(
         val shopper =
             Shopper(
                 email = command.email!!,
+                username = command.username!!,
             )
         shopperRepository.save(shopper)
         return ResponseEntity

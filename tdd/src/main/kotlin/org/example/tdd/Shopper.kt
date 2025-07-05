@@ -10,6 +10,8 @@ import jakarta.persistence.Id
 class Shopper(
     @Column(unique = true)
     val email: String,
+    @Column(unique = true)
+    val username: String,
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val dataKey: Long = 0L,
