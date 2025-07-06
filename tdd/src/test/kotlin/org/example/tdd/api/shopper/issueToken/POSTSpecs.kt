@@ -2,6 +2,7 @@ package org.example.tdd.api.shopper.issueToken
 
 import org.assertj.core.api.Assertions.assertThat
 import org.example.tdd.api.CommerceApiTest
+import org.example.tdd.api.JwtAssertions
 import org.example.tdd.api.seller.signup.EmailGenerator
 import org.example.tdd.api.seller.signup.PasswordGenerator
 import org.example.tdd.api.seller.signup.UsernameGenerator
@@ -48,5 +49,36 @@ class POSTSpecs {
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
         assertThat(response.body).isNotNull
         assertThat(response.body!!.accessToken).isNotBlank
+    }
+
+    @Test
+    fun `접근 토큰은 JWT 형식을 따른다`(
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val email = EmailGenerator.generateEmail()
+        val password = PasswordGenerator.generate()
+
+        client.postForEntity<Unit>(
+            "/shopper/signup",
+            CreateShopperCommand(
+                email = email,
+                password = password,
+                username = UsernameGenerator.generate(),
+            ),
+        )
+        // Act
+        val response =
+            client.postForEntity<AccessTokenCarrier>(
+                "/shopper/issueToken",
+                IssueShopperToken(
+                    email = email,
+                    password = password,
+                ),
+            )
+
+        // Assert
+        val accessToken = response.body?.accessToken
+        assertThat(accessToken).satisfies(JwtAssertions.conformsToJwtFormat())
     }
 }
