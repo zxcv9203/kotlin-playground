@@ -104,4 +104,34 @@ class POSTSpecs {
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
+
+    @Test
+    fun `잘못된 비밀번호가 사용되면 400 Bad Request 상태코드를 반환한다`(
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val email = EmailGenerator.generateEmail()
+        val password = PasswordGenerator.generate()
+
+        client.postForEntity<Unit>(
+            "/shopper/signup",
+            CreateShopperCommand(
+                email = email,
+                password = password,
+                username = UsernameGenerator.generate(),
+            ),
+        )
+        // Act
+        val response =
+            client.postForEntity<ResponseEntity<AccessTokenCarrier>>(
+                "/shopper/issueToken",
+                IssueShopperToken(
+                    email = email,
+                    password = "wrongPassword",
+                ),
+            )
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
 }

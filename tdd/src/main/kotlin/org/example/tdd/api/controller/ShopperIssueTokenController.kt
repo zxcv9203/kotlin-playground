@@ -6,6 +6,7 @@ import org.example.tdd.api.JwtKeyHolder
 import org.example.tdd.query.IssueShopperToken
 import org.example.tdd.result.AccessTokenCarrier
 import org.springframework.http.ResponseEntity
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 class ShopperIssueTokenController(
     private val shopperRepository: ShopperRepository,
     private val jwtKeyHolder: JwtKeyHolder,
+    private val passwordEncoder: PasswordEncoder,
 ) {
     @PostMapping("/shopper/issueToken")
     fun issueToken(
@@ -21,6 +23,7 @@ class ShopperIssueTokenController(
     ): ResponseEntity<AccessTokenCarrier> =
         shopperRepository
             .findByEmail(query.email)
+            ?.takeIf { passwordEncoder.matches(query.password, it.hashedPassword) }
             ?.let { composeToken() }
             ?.let { AccessTokenCarrier(it) }
             ?.let { ResponseEntity.ok(it) }
