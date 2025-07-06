@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder
+import org.springframework.security.oauth2.jwt.JwtDecoder
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
 import org.springframework.security.web.DefaultSecurityFilterChain
 import javax.crypto.spec.SecretKeySpec
 
@@ -23,9 +25,16 @@ class SecurityConfig {
     }
 
     @Bean
-    fun securityFilterChain(http: HttpSecurity): DefaultSecurityFilterChain =
+    fun jwtDecoder(jwtKeyHolder: JwtKeyHolder): JwtDecoder = NimbusJwtDecoder.withSecretKey(jwtKeyHolder.key).build()
+
+    @Bean
+    fun securityFilterChain(
+        http: HttpSecurity,
+        jwtDecoder: JwtDecoder,
+    ): DefaultSecurityFilterChain =
         http
             .csrf { it.disable() }
+            .oauth2ResourceServer { it.jwt { jwt -> jwt.decoder(jwtDecoder) } }
             .authorizeHttpRequests {
                 it
                     .requestMatchers(
@@ -33,7 +42,6 @@ class SecurityConfig {
                         "/seller/issueToken",
                         "/shopper/signup",
                         "/shopper/issueToken",
-                        "/seller/me",
                     ).permitAll()
             }.build()
 }
