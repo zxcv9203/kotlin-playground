@@ -33,6 +33,7 @@ class SecurityConfig {
                         "/seller/issueToken",
                         "/shopper/signup",
                         "/shopper/issueToken",
+                        "/seller/me",
                     ).permitAll()
             }.build()
 }
