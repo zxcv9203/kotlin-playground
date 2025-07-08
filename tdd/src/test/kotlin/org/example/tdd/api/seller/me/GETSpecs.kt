@@ -69,4 +69,74 @@ class GETSpecs {
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.UNAUTHORIZED)
     }
+
+    @Test
+    fun `서로 다른 판매자의 식별자는 서로 다르다`(
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val email1 = EmailGenerator.generateEmail()
+        val username1 = UsernameGenerator.generate()
+        val password1 = PasswordGenerator.generate()
+
+        val command1 =
+            CreateSellerCommand(
+                email = email1,
+                username = username1,
+                password = password1,
+            )
+        client.postForEntity<Unit>("/seller/signup", command1)
+
+        val carrier1 =
+            client.postForObject(
+                "/seller/issueToken",
+                IssueSellerToken(email1, password1),
+                AccessTokenCarrier::class.java,
+            )
+        val token1 = carrier1.accessToken
+
+        val email2 = EmailGenerator.generateEmail()
+        val username2 = UsernameGenerator.generate()
+        val password2 = PasswordGenerator.generate()
+
+        val command2 =
+            CreateSellerCommand(
+                email = email2,
+                username = username2,
+                password = password2,
+            )
+        client.postForEntity<Unit>("/seller/signup", command2)
+
+        val carrier2 =
+            client.postForObject(
+                "/seller/issueToken",
+                IssueSellerToken(email2, password2),
+                AccessTokenCarrier::class.java,
+            )
+        val token2 = carrier2.accessToken
+
+        // Act
+        val response1 =
+            client.exchange(
+                get("/seller/me")
+                    .header("Authorization", "Bearer $token1")
+                    .build(),
+                SellerMeView::class.java,
+            )
+
+        val response2 =
+            client.exchange(
+                get("/seller/me")
+                    .header("Authorization", "Bearer $token2")
+                    .build(),
+                SellerMeView::class.java,
+            )
+
+        // Assert
+        println(response1)
+        println(response2)
+        assertThat(response1.body).isNotNull
+        assertThat(response2.body).isNotNull
+        assertThat(response1!!.body!!.id).isNotEqualTo(response2!!.body!!.id)
+    }
 }
