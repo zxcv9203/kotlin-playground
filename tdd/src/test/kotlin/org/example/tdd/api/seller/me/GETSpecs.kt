@@ -187,4 +187,40 @@ class GETSpecs {
         assertThat(response2.body).isNotNull
         assertThat(response1!!.body!!.id).isEqualTo(response2!!.body!!.id)
     }
+
+    @Test
+    fun `판매자의 기본 정보가 올바르게 설정된다`(
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val email = EmailGenerator.generateEmail()
+        val username = UsernameGenerator.generate()
+        val password = PasswordGenerator.generate()
+        val command =
+            CreateSellerCommand(
+                email = email,
+                username = username,
+                password = password,
+            )
+        client.postForEntity<Unit>("/seller/signup", command)
+        val carrier =
+            client.postForObject(
+                "/seller/issueToken",
+                IssueSellerToken(email, password),
+                AccessTokenCarrier::class.java,
+            )
+        val token = carrier.accessToken
+        // Act
+        val response =
+            client.exchange(
+                get("/seller/me")
+                    .header("Authorization", "Bearer $token")
+                    .build(),
+                SellerMeView::class.java,
+            )
+        // Assert
+        assertThat(response.body).isNotNull
+        assertThat(response.body!!.email).isEqualTo(email)
+        assertThat(response.body!!.username).isEqualTo(username)
+    }
 }
