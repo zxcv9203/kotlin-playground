@@ -1,6 +1,7 @@
 package org.example.tdd.api.controller
 
 import io.jsonwebtoken.Jwts
+import org.example.tdd.Seller
 import org.example.tdd.SellerRepository
 import org.example.tdd.api.JwtKeyHolder
 import org.example.tdd.query.IssueSellerToken
@@ -24,15 +25,15 @@ class SellerIssueTokenController(
         sellerRepository
             .findByEmail(query.email)
             ?.takeIf { passwordEncoder.matches(query.password, it.hashedPassword) }
-            ?.let { composeToken() }
+            ?.let { composeToken(it) }
             ?.let { AccessTokenCarrier(it) }
             ?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.badRequest().build()
 
-    private fun composeToken(): String =
+    private fun composeToken(seller: Seller): String =
         Jwts
             .builder()
-            .setSubject("seller")
+            .setSubject(seller.id.toString())
             .signWith(jwtKeyHolder.key)
             .compact()
 }

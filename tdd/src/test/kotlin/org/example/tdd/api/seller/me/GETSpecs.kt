@@ -139,4 +139,52 @@ class GETSpecs {
         assertThat(response2.body).isNotNull
         assertThat(response1!!.body!!.id).isNotEqualTo(response2!!.body!!.id)
     }
+
+    @Test
+    fun `같은 판매자의 식별자는 항상 같다`(
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val email = EmailGenerator.generateEmail()
+        val username = UsernameGenerator.generate()
+        val password = PasswordGenerator.generate()
+
+        val command =
+            CreateSellerCommand(
+                email = email,
+                username = username,
+                password = password,
+            )
+        client.postForEntity<Unit>("/seller/signup", command)
+
+        val carrier =
+            client.postForObject(
+                "/seller/issueToken",
+                IssueSellerToken(email, password),
+                AccessTokenCarrier::class.java,
+            )
+        val token = carrier.accessToken
+
+        // Act
+        val response1 =
+            client.exchange(
+                get("/seller/me")
+                    .header("Authorization", "Bearer $token")
+                    .build(),
+                SellerMeView::class.java,
+            )
+
+        val response2 =
+            client.exchange(
+                get("/seller/me")
+                    .header("Authorization", "Bearer $token")
+                    .build(),
+                SellerMeView::class.java,
+            )
+
+        // Assert
+        assertThat(response1.body).isNotNull
+        assertThat(response2.body).isNotNull
+        assertThat(response1!!.body!!.id).isEqualTo(response2!!.body!!.id)
+    }
 }
