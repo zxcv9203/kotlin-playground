@@ -1,5 +1,8 @@
 package org.example.tdd.api
 
+import org.example.tdd.api.seller.signup.EmailGenerator
+import org.example.tdd.api.seller.signup.PasswordGenerator
+import org.example.tdd.api.seller.signup.UsernameGenerator
 import org.example.tdd.command.CreateShopperCommand
 import org.example.tdd.query.IssueShopperToken
 import org.example.tdd.result.AccessTokenCarrier
@@ -42,5 +45,13 @@ class TestFixture(
         return carrier
             ?.accessToken
             ?: throw IllegalStateException("Access token could not be issued")
+    }
+
+    fun createShopperThenIssueToken(): String {
+        val email = EmailGenerator.generateEmail()
+        val password = PasswordGenerator.generate()
+        val username = UsernameGenerator.generate()
+        createShopper(email, username, password)
+        return issueShopperToken(email, password)
     }
 }

@@ -60,4 +60,37 @@ class GETSpecs {
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.UNAUTHORIZED)
     }
+
+    @Test
+    fun `서로 다른 구매자의 식별자는 서로 다르다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        val token1 = fixture.createShopperThenIssueToken()
+        val token2 = fixture.createShopperThenIssueToken()
+
+        // Act
+        val response1 =
+            fixture
+                .client
+                .exchange<ShopperMeView>(
+                    RequestEntity
+                        .get("/shopper/me")
+                        .header("Authorization", "Bearer $token1")
+                        .build(),
+                )
+
+        val response2 =
+            fixture
+                .client
+                .exchange<ShopperMeView>(
+                    RequestEntity
+                        .get("/shopper/me")
+                        .header("Authorization", "Bearer $token2")
+                        .build(),
+                )
+
+        // Assert
+        assertThat(response1.body?.id).isNotEqualTo(response2.body?.id)
+    }
 }
