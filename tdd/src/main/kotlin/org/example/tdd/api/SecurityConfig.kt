@@ -42,7 +42,6 @@ class SecurityConfig {
                         "/seller/issueToken",
                         "/shopper/signup",
                         "/shopper/issueToken",
-                        "/shopper/me",
                     ).permitAll()
                     .anyRequest()
                     .authenticated()

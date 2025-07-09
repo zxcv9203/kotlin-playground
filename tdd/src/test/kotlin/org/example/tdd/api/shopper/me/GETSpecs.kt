@@ -42,4 +42,22 @@ class GETSpecs {
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
     }
+
+    @Test
+    fun `접근 토큰을 사용하지 않으면 401 Unauthorized 상태코드를 반환한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Act
+        val response =
+            fixture
+                .client
+                .exchange<ShopperMeView>(
+                    RequestEntity
+                        .get("/shopper/me")
+                        .build(),
+                )
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.UNAUTHORIZED)
+    }
 }
