@@ -1,6 +1,7 @@
 package org.example.tdd.api.controller
 
 import io.jsonwebtoken.Jwts
+import org.example.tdd.Shopper
 import org.example.tdd.ShopperRepository
 import org.example.tdd.api.JwtKeyHolder
 import org.example.tdd.query.IssueShopperToken
@@ -24,15 +25,15 @@ class ShopperIssueTokenController(
         shopperRepository
             .findByEmail(query.email)
             ?.takeIf { passwordEncoder.matches(query.password, it.hashedPassword) }
-            ?.let { composeToken() }
+            ?.let { composeToken(it) }
             ?.let { AccessTokenCarrier(it) }
             ?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.badRequest().build()
 
-    private fun composeToken(): String =
+    private fun composeToken(shopper: Shopper): String =
         Jwts
             .builder()
-            .setSubject("shopper")
+            .setSubject(shopper.id.toString())
             .signWith(jwtKeyHolder.key)
             .compact()
 }

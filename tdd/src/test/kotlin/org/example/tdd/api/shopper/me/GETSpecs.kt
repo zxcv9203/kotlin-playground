@@ -93,4 +93,38 @@ class GETSpecs {
         // Assert
         assertThat(response1.body?.id).isNotEqualTo(response2.body?.id)
     }
+
+    @Test
+    fun `같은 구매자의 식별자는 항상 같다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        val email = EmailGenerator.generateEmail()
+        val password = PasswordGenerator.generate()
+        val username = UsernameGenerator.generate()
+        fixture.createShopper(email, username, password)
+        val token = fixture.issueShopperToken(email, password)
+        val token2 = fixture.issueShopperToken(email, password)
+        // Act
+        val response1 =
+            fixture
+                .client
+                .exchange<ShopperMeView>(
+                    RequestEntity
+                        .get("/shopper/me")
+                        .header("Authorization", "Bearer $token")
+                        .build(),
+                )
+        val response2 =
+            fixture
+                .client
+                .exchange<ShopperMeView>(
+                    RequestEntity
+                        .get("/shopper/me")
+                        .header("Authorization", "Bearer $token2")
+                        .build(),
+                )
+        // Assert
+        assertThat(response1.body?.id).isEqualTo(response2.body?.id)
+    }
 }
