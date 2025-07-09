@@ -32,6 +32,7 @@ class ShopperIssueTokenController(
     private fun composeToken(): String =
         Jwts
             .builder()
+            .setSubject("shopper")
             .signWith(jwtKeyHolder.key)
             .compact()
 }
