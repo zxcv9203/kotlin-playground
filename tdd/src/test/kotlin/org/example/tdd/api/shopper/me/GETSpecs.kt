@@ -10,6 +10,7 @@ import org.example.tdd.view.ShopperMeView
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.web.client.exchange
+import org.springframework.boot.test.web.client.getForObject
 import org.springframework.http.HttpStatus
 import org.springframework.http.RequestEntity
 import kotlin.test.Test
@@ -126,5 +127,28 @@ class GETSpecs {
                 )
         // Assert
         assertThat(response1.body?.id).isEqualTo(response2.body?.id)
+    }
+
+    @Test
+    fun `구매자의 기본 정보가 올바르게 설정된다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        val email = EmailGenerator.generateEmail()
+        val password = PasswordGenerator.generate()
+        val username = UsernameGenerator.generate()
+        fixture.createShopper(email, username, password)
+        fixture.setShopperAsDefaultUser(email, password)
+
+        // Act
+        val response =
+            fixture
+                .client
+                .getForObject<ShopperMeView>("/shopper/me")
+
+        // Assert
+        assertThat(response).isNotNull
+        assertThat(response?.email).isEqualTo(email)
+        assertThat(response?.username).isEqualTo(username)
     }
 }

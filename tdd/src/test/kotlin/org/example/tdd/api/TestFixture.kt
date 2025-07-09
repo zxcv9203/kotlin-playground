@@ -54,4 +54,19 @@ class TestFixture(
         createShopper(email, username, password)
         return issueShopperToken(email, password)
     }
+
+    fun setShopperAsDefaultUser(
+        email: String,
+        password: String,
+    ) {
+        val token = issueShopperToken(email, password)
+        client.restTemplate
+            .interceptors
+            .add { request, body, execution ->
+                if (!request.headers.containsKey("Authorization")) {
+                    request.headers.add("Authorization", "Bearer $token")
+                }
+                return@add execution.execute(request, body)
+            }
+    }
 }
