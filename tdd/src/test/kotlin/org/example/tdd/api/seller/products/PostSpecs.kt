@@ -5,6 +5,8 @@ import org.example.tdd.RegisterProductCommandGenerator
 import org.example.tdd.api.CommerceApiTest
 import org.example.tdd.api.TestFixture
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.web.client.postForEntity
 import org.springframework.http.HttpStatus
@@ -49,5 +51,32 @@ class PostSpecs {
 
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.FORBIDDEN)
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = [
+            "invalid-uri",
+            "http://",
+            "://missing-scheme.com",
+        ],
+    )
+    fun `imageUri 속성이 URI 형식을 따르지 않으면 400 Bad Request 상태코드를 반환한다`(
+        imageUri: String,
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.createSellerThenSetAsDefaultUser()
+
+        // Act
+        val response =
+            fixture.client
+                .postForEntity<Unit>(
+                    "/seller/products",
+                    RegisterProductCommandGenerator.generate(imageUri = imageUri),
+                )
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
     }
 }

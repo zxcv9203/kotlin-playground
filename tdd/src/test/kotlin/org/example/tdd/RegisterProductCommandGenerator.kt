@@ -6,14 +6,19 @@ import java.util.UUID
 import java.util.concurrent.ThreadLocalRandom
 
 object RegisterProductCommandGenerator {
-    fun generate() =
-        RegisterProductCommand(
-            name = generateProductName(),
-            imageUri = generateImageUri(),
-            description = generateDescription(),
-            priceAmount = generatePriceAmount(),
-            stockQuantity = generateStockQuantity(),
-        )
+    fun generate(
+        name: String = generateProductName(),
+        imageUri: String = generateImageUri(),
+        description: String = generateDescription(),
+        priceAmount: BigDecimal = generatePriceAmount(),
+        stockQuantity: Int = generateStockQuantity(),
+    ) = RegisterProductCommand(
+        name = name,
+        imageUri = imageUri,
+        description = description,
+        priceAmount = priceAmount,
+        stockQuantity = stockQuantity,
+    )
 
     private fun generateProductName(): String = "name${UUID.randomUUID()}"
 
