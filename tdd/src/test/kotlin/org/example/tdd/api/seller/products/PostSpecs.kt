@@ -31,4 +31,23 @@ class PostSpecs {
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.CREATED)
     }
+
+    @Test
+    fun `판매자가 아닌 사용자의 접근 토큰을 사용하면 403 Forbidden 상태코드를 반환한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.createShopperThenSetAsDefaultUser()
+
+        // Act
+        val response =
+            fixture.client
+                .postForEntity<Unit>(
+                    "/seller/products",
+                    RegisterProductCommandGenerator.generate(),
+                )
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.FORBIDDEN)
+    }
 }

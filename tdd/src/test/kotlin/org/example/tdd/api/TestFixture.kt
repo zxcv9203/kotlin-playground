@@ -69,11 +69,11 @@ class TestFixture(
     private fun setDefaultAuthorization(authorization: String) {
         client.restTemplate
             .interceptors
-            .add { request, body, execution ->
+            .addFirst { request, body, execution ->
                 if (!request.headers.containsKey("Authorization")) {
                     request.headers.add("Authorization", authorization)
                 }
-                return@add execution.execute(request, body)
+                return@addFirst execution.execute(request, body)
             }
     }
 
@@ -119,5 +119,12 @@ class TestFixture(
         return carrier
             ?.accessToken
             ?: throw IllegalStateException("Access token could not be issued")
+    }
+
+    fun createShopperThenSetAsDefaultUser() {
+        val email = EmailGenerator.generateEmail()
+        val password = PasswordGenerator.generate()
+        createShopper(email, UsernameGenerator.generate(), password)
+        setShopperAsDefaultUser(email, password)
     }
 }
