@@ -26,7 +26,10 @@ class SellerProductsController(
         if (!isValidUri(command.imageUri)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         }
-        return ResponseEntity.status(HttpStatus.CREATED).build()
+        val location = URI.create("/seller/products/${UUID.randomUUID()}")
+        return ResponseEntity
+            .created(location)
+            .build()
     }
 
     private fun isValidUri(imageUri: String): Boolean {

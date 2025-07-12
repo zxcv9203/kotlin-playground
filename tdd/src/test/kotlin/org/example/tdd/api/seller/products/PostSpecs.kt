@@ -10,6 +10,8 @@ import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.web.client.postForEntity
 import org.springframework.http.HttpStatus
+import java.util.UUID
+import java.util.function.Predicate
 import kotlin.test.Test
 
 @CommerceApiTest
@@ -78,5 +80,43 @@ class PostSpecs {
 
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
+
+    @Test
+    fun `올바르게 요청하면 등록된 상품 정보에 접근하는 Location 헤더를 반환한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.createSellerThenSetAsDefaultUser()
+
+        // Act
+        val response =
+            fixture.client
+                .postForEntity<Unit>(
+                    "/seller/products",
+                    RegisterProductCommandGenerator.generate(),
+                )
+
+        // Assert
+        val actual = response.headers.location
+        assertThat(actual).isNotNull
+        assertThat(actual!!.isAbsolute).isFalse
+        assertThat(actual.path)
+            .startsWith("/seller/products/")
+            .matches(endsWithUUID())
+    }
+
+    private fun endsWithUUID(): Predicate<String> {
+        return Predicate { path ->
+            val segments = path.split("/")
+            if (segments.isEmpty()) return@Predicate false
+            val lastSegment = segments.last()
+            try {
+                UUID.fromString(lastSegment)
+                true
+            } catch (e: IllegalArgumentException) {
+                false
+            }
+        }
     }
 }
