@@ -8,13 +8,25 @@ import org.example.tdd.command.CreateShopperCommand
 import org.example.tdd.query.IssueSellerToken
 import org.example.tdd.query.IssueShopperToken
 import org.example.tdd.result.AccessTokenCarrier
+import org.springframework.boot.test.web.client.LocalHostUriTemplateHandler
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.client.postForEntity
 import org.springframework.boot.test.web.client.postForObject
+import org.springframework.core.env.Environment
 
 class TestFixture(
     val client: TestRestTemplate,
 ) {
+    companion object {
+        fun create(environment: Environment): TestFixture {
+            val client = TestRestTemplate()
+            val handler = LocalHostUriTemplateHandler(environment)
+            client.setUriTemplateHandler(handler)
+
+            return TestFixture(client)
+        }
+    }
+
     fun createShopper(
         email: String,
         username: String,
