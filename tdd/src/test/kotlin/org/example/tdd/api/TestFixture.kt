@@ -1,5 +1,6 @@
 package org.example.tdd.api
 
+import org.example.tdd.RegisterProductCommandGenerator
 import org.example.tdd.api.seller.signup.EmailGenerator
 import org.example.tdd.api.seller.signup.PasswordGenerator
 import org.example.tdd.api.seller.signup.UsernameGenerator
@@ -13,6 +14,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.client.postForEntity
 import org.springframework.boot.test.web.client.postForObject
 import org.springframework.core.env.Environment
+import java.util.UUID
 
 class TestFixture(
     val client: TestRestTemplate,
@@ -138,5 +140,18 @@ class TestFixture(
         val password = PasswordGenerator.generate()
         createShopper(email, UsernameGenerator.generate(), password)
         setShopperAsDefaultUser(email, password)
+    }
+
+    fun registerProduct(): UUID {
+        val response =
+            client.postForEntity<Unit>(
+                "/seller/products",
+                RegisterProductCommandGenerator.generate(),
+            )
+        val location =
+            response.headers.location
+                ?: throw IllegalStateException("Location header is missing in the response")
+        val id = location.path.substring("/seller/products/".length)
+        return UUID.fromString(id)
     }
 }
