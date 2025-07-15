@@ -1,6 +1,5 @@
 package org.example.tdd.api.controller
 
-import org.example.tdd.SellerRepository
 import org.example.tdd.command.RegisterProductCommand
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -9,21 +8,14 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
-import java.security.Principal
 import java.util.UUID
 
 @RestController
-class SellerProductsController(
-    private val sellerRepository: SellerRepository,
-) {
+class SellerProductsController {
     @PostMapping("/seller/products")
     fun registerProduct(
-        user: Principal,
         @RequestBody command: RegisterProductCommand,
     ): ResponseEntity<Unit> {
-        val id = UUID.fromString(user.name)
-        sellerRepository.findById(id)
-            ?: return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         if (!isValidUri(command.imageUri)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         }

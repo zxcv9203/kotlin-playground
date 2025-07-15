@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder
+import org.springframework.security.oauth2.core.authorization.OAuth2AuthorizationManagers.hasScope
 import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
 import org.springframework.security.web.DefaultSecurityFilterChain
@@ -43,6 +44,8 @@ class SecurityConfig {
                         "/shopper/signup",
                         "/shopper/issueToken",
                     ).permitAll()
+                    .requestMatchers("/seller/**")
+                    .access(hasScope("seller"))
                     .anyRequest()
                     .authenticated()
             }.build()
