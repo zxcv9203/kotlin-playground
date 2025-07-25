@@ -63,4 +63,22 @@ class GetSpecs {
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.NOT_FOUND)
     }
+
+    @Test
+    fun `다른 판매자가 등록한 상품 식별자를 사용하면 404 Not Found 상태코드를 반환한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.createSellerThenSetAsDefaultUser()
+        val id = fixture.registerProduct()
+
+        fixture.createSellerThenSetAsDefaultUser()
+
+        // Act
+        val response =
+            fixture.client.getForEntity<SellerProductView>("/seller/products/$id")
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.NOT_FOUND)
+    }
 }

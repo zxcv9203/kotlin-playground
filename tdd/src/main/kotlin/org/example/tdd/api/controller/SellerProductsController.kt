@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
+import java.security.Principal
 import java.util.UUID
 
 @RestController
@@ -20,17 +21,20 @@ class SellerProductsController(
     @PostMapping("/seller/products")
     fun registerProduct(
         @RequestBody command: RegisterProductCommand,
+        user: Principal,
     ): ResponseEntity<Unit> {
         if (!isValidUri(command.imageUri)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         }
+        val id = UUID.randomUUID()
         val product =
             Product(
-                id = UUID.randomUUID(),
+                id = id,
+                sellerId = UUID.fromString(user.name),
             )
         productRepository.save(product)
 
-        val location = URI.create("/seller/products/${UUID.randomUUID()}")
+        val location = URI.create("/seller/products/$id")
         return ResponseEntity
             .created(location)
             .build()
@@ -40,7 +44,7 @@ class SellerProductsController(
         try {
             val uri = URI.create(imageUri)
             return uri.host != null
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             return false
         }
     }
@@ -48,9 +52,11 @@ class SellerProductsController(
     @GetMapping("/seller/products/{id}")
     fun findProducts(
         @PathVariable id: UUID,
+        user: Principal,
     ): ResponseEntity<Unit> =
         productRepository
             .findById(id)
+            ?.takeIf { it.sellerId == UUID.fromString(user.name) }
             ?.let { ResponseEntity.ok().build() }
             ?: ResponseEntity.notFound().build()
 }
