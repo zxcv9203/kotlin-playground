@@ -1,7 +1,9 @@
 package org.example.tdd.api.seller.id
 
 import org.assertj.core.api.Assertions.assertThat
+import org.example.tdd.RegisterProductCommandGenerator
 import org.example.tdd.api.CommerceApiTest
+import org.example.tdd.api.ProductAssertions
 import org.example.tdd.api.TestFixture
 import org.example.tdd.view.SellerProductView
 import org.junit.jupiter.api.DisplayName
@@ -98,5 +100,22 @@ class GetSpecs {
         // Assert
         assertThat(response).isNotNull
         assertThat(response?.id).isEqualTo(id)
+    }
+
+    @Test
+    fun `상품 정보를 올바르게 반환한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.createSellerThenSetAsDefaultUser()
+        val command = RegisterProductCommandGenerator.generate()
+        val id = fixture.registerProduct(command)
+
+        // Act
+        val response =
+            fixture.client.getForObject<SellerProductView>("/seller/products/$id")!!
+
+        // Assert
+        assertThat(response).satisfies(ProductAssertions.isDerivedFrom(command))
     }
 }

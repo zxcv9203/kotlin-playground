@@ -6,6 +6,7 @@ import org.example.tdd.api.seller.signup.PasswordGenerator
 import org.example.tdd.api.seller.signup.UsernameGenerator
 import org.example.tdd.command.CreateSellerCommand
 import org.example.tdd.command.CreateShopperCommand
+import org.example.tdd.command.RegisterProductCommand
 import org.example.tdd.query.IssueSellerToken
 import org.example.tdd.query.IssueShopperToken
 import org.example.tdd.result.AccessTokenCarrier
@@ -142,11 +143,11 @@ class TestFixture(
         setShopperAsDefaultUser(email, password)
     }
 
-    fun registerProduct(): UUID {
+    fun registerProduct(command: RegisterProductCommand = RegisterProductCommandGenerator.generate()): UUID {
         val response =
             client.postForEntity<Unit>(
                 "/seller/products",
-                RegisterProductCommandGenerator.generate(),
+                command,
             )
         val location =
             response.headers.location

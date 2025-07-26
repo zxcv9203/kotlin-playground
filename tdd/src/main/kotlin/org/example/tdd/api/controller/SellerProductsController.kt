@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
-import java.math.BigDecimal
 import java.net.URI
 import java.security.Principal
 import java.time.LocalDateTime
@@ -34,6 +33,11 @@ class SellerProductsController(
             Product(
                 id = id,
                 sellerId = UUID.fromString(user.name),
+                name = command.name,
+                description = command.description,
+                priceAmount = command.priceAmount,
+                imageUri = command.imageUri,
+                stockQuantity = command.stockQuantity,
             )
         productRepository.save(product)
 
@@ -63,11 +67,11 @@ class SellerProductsController(
             ?.let {
                 SellerProductView(
                     id = it.id,
-                    name = "",
-                    description = "",
-                    priceAmount = BigDecimal.ZERO,
-                    imageUri = "",
-                    stockQuantity = 0,
+                    name = it.name,
+                    description = it.description,
+                    priceAmount = it.priceAmount,
+                    imageUri = it.imageUri,
+                    stockQuantity = it.stockQuantity,
                     registeredTimeUtc = LocalDateTime.now(),
                 )
             }?.let { ResponseEntity.ok(it) }
