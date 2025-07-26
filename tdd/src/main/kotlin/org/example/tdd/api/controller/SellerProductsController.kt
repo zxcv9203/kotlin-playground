@@ -3,6 +3,7 @@ package org.example.tdd.api.controller
 import org.example.tdd.Product
 import org.example.tdd.ProductRepository
 import org.example.tdd.command.RegisterProductCommand
+import org.example.tdd.view.SellerProductView
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -10,8 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
+import java.math.BigDecimal
 import java.net.URI
 import java.security.Principal
+import java.time.LocalDateTime
 import java.util.UUID
 
 @RestController
@@ -53,10 +56,20 @@ class SellerProductsController(
     fun findProducts(
         @PathVariable id: UUID,
         user: Principal,
-    ): ResponseEntity<Unit> =
+    ): ResponseEntity<SellerProductView> =
         productRepository
             .findById(id)
             ?.takeIf { it.sellerId == UUID.fromString(user.name) }
-            ?.let { ResponseEntity.ok().build() }
+            ?.let {
+                SellerProductView(
+                    id = it.id,
+                    name = "",
+                    description = "",
+                    priceAmount = BigDecimal.ZERO,
+                    imageUri = "",
+                    stockQuantity = 0,
+                    registeredTimeUtc = LocalDateTime.now(),
+                )
+            }?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.notFound().build()
 }

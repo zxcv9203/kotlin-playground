@@ -7,6 +7,7 @@ import org.example.tdd.view.SellerProductView
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.web.client.getForEntity
+import org.springframework.boot.test.web.client.getForObject
 import org.springframework.http.HttpStatus
 import java.util.UUID
 import kotlin.test.Test
@@ -80,5 +81,22 @@ class GetSpecs {
 
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.NOT_FOUND)
+    }
+
+    @Test
+    fun `상품 식별자를 올바르게 반환한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.createSellerThenSetAsDefaultUser()
+        val id = fixture.registerProduct()
+
+        // Act
+        val response =
+            fixture.client.getForObject<SellerProductView>("/seller/products/$id")
+
+        // Assert
+        assertThat(response).isNotNull
+        assertThat(response?.id).isEqualTo(id)
     }
 }
