@@ -1,6 +1,7 @@
 package org.example.tdd.api.seller.id
 
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.within
 import org.example.tdd.RegisterProductCommandGenerator
 import org.example.tdd.api.CommerceApiTest
 import org.example.tdd.api.ProductAssertions
@@ -11,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.web.client.getForEntity
 import org.springframework.boot.test.web.client.getForObject
 import org.springframework.http.HttpStatus
+import java.time.LocalDateTime
+import java.time.ZoneOffset.UTC
+import java.time.temporal.ChronoUnit
 import java.util.UUID
 import kotlin.test.Test
 
@@ -117,5 +121,24 @@ class GetSpecs {
 
         // Assert
         assertThat(response).satisfies(ProductAssertions.isDerivedFrom(command))
+    }
+
+    @Test
+    fun `상품 등록 시각을 올바르게 반환한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.createSellerThenSetAsDefaultUser()
+        val now = LocalDateTime.now(UTC)
+        val command = RegisterProductCommandGenerator.generate()
+        val id = fixture.registerProduct(command)
+
+        // Act
+        val response =
+            fixture.client.getForObject<SellerProductView>("/seller/products/$id")!!
+
+        // Assert
+        assertThat(response.registeredTimeUtc)
+            .isCloseTo(now, within(1, ChronoUnit.SECONDS))
     }
 }

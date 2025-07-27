@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 import java.security.Principal
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.UUID
 
 @RestController
@@ -38,6 +39,7 @@ class SellerProductsController(
                 priceAmount = command.priceAmount,
                 imageUri = command.imageUri,
                 stockQuantity = command.stockQuantity,
+                registeredTimeUtc = LocalDateTime.now(ZoneOffset.UTC),
             )
         productRepository.save(product)
 
@@ -72,7 +74,7 @@ class SellerProductsController(
                     priceAmount = it.priceAmount,
                     imageUri = it.imageUri,
                     stockQuantity = it.stockQuantity,
-                    registeredTimeUtc = LocalDateTime.now(),
+                    registeredTimeUtc = it.registeredTimeUtc,
                 )
             }?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.notFound().build()
