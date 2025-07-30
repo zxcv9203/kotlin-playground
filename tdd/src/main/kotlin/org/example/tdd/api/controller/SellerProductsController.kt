@@ -78,4 +78,8 @@ class SellerProductsController(
                 )
             }?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.notFound().build()
+
+    @GetMapping("/seller/products")
+    fun findProductsById() {
+    }
 }
