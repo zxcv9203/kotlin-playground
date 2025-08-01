@@ -32,4 +32,27 @@ class GetSpecs {
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
     }
+
+    @Test
+    fun `판매자가 등록한 모든 상품을 반환한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.createSellerThenSetAsDefaultUser()
+        val productIds = fixture.registerProducts()
+
+        // Act
+        val response =
+            fixture.client.exchange(
+                RequestEntity.get("/seller/products").build(),
+                object : ParameterizedTypeReference<ArrayCarrier<SellerProductView>>() {},
+            )
+
+        // Assert
+        val actual = response.body
+        assertThat(actual).isNotNull
+        val extractProductIds = actual!!.items.map(SellerProductView::id)
+        assertThat(extractProductIds)
+            .containsAll(productIds)
+    }
 }

@@ -155,4 +155,11 @@ class TestFixture(
         val id = location.path.substring("/seller/products/".length)
         return UUID.fromString(id)
     }
+
+    fun registerProducts(): List<UUID> =
+        listOf(
+            registerProduct(),
+            registerProduct(),
+            registerProduct(),
+        )
 }

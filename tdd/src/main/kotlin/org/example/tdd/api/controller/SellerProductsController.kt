@@ -3,6 +3,7 @@ package org.example.tdd.api.controller
 import org.example.tdd.Product
 import org.example.tdd.ProductRepository
 import org.example.tdd.command.RegisterProductCommand
+import org.example.tdd.view.ArrayCarrier
 import org.example.tdd.view.SellerProductView
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -80,6 +81,21 @@ class SellerProductsController(
             ?: ResponseEntity.notFound().build()
 
     @GetMapping("/seller/products")
-    fun findProductsById() {
+    fun findProductsById(): ResponseEntity<ArrayCarrier<SellerProductView>> {
+        val response =
+            productRepository
+                .findAll()
+                .map { product ->
+                    SellerProductView(
+                        id = product.id,
+                        name = product.name,
+                        description = product.description,
+                        priceAmount = product.priceAmount,
+                        imageUri = product.imageUri,
+                        stockQuantity = product.stockQuantity,
+                        registeredTimeUtc = product.registeredTimeUtc,
+                    )
+                }.toTypedArray()
+        return ResponseEntity.ok(ArrayCarrier(response))
     }
 }
