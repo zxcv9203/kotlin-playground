@@ -81,10 +81,11 @@ class SellerProductsController(
             ?: ResponseEntity.notFound().build()
 
     @GetMapping("/seller/products")
-    fun findProductsById(): ResponseEntity<ArrayCarrier<SellerProductView>> {
+    fun findProductsById(user: Principal): ResponseEntity<ArrayCarrier<SellerProductView>> {
+        val sellerId = UUID.fromString(user.name)
         val response =
             productRepository
-                .findAll()
+                .findBySellerId(sellerId)
                 .map { product ->
                     SellerProductView(
                         id = product.id,

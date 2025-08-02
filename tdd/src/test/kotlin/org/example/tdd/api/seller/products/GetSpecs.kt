@@ -55,4 +55,29 @@ class GetSpecs {
         assertThat(extractProductIds)
             .containsAll(productIds)
     }
+
+    @Test
+    fun `다른 판매자가 등록한 상품이 포함되지 않는다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.createSellerThenSetAsDefaultUser()
+        val unexpected = fixture.registerProduct()
+
+        fixture.createSellerThenSetAsDefaultUser()
+        fixture.registerProduct()
+
+        // Act
+        val response =
+            fixture.client.exchange(
+                RequestEntity.get("/seller/products").build(),
+                object : ParameterizedTypeReference<ArrayCarrier<SellerProductView>>() {},
+            )
+
+        // Assert
+        val actual = response.body
+        assertThat(actual).isNotNull
+        assertThat(actual!!.items.map(SellerProductView::id))
+            .doesNotContain(unexpected)
+    }
 }

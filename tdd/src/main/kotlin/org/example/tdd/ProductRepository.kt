@@ -5,4 +5,6 @@ import java.util.UUID
 
 interface ProductRepository : JpaRepository<Product, Long> {
     fun findById(id: UUID): Product?
+
+    fun findBySellerId(sellerId: UUID): List<Product>
 }
