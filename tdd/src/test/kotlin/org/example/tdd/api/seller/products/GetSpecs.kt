@@ -1,7 +1,9 @@
 package org.example.tdd.api.seller.products
 
 import org.assertj.core.api.Assertions.assertThat
+import org.example.tdd.RegisterProductCommandGenerator
 import org.example.tdd.api.CommerceApiTest
+import org.example.tdd.api.ProductAssertions
 import org.example.tdd.api.TestFixture
 import org.example.tdd.view.ArrayCarrier
 import org.example.tdd.view.SellerProductView
@@ -79,5 +81,29 @@ class GetSpecs {
         assertThat(actual).isNotNull
         assertThat(actual!!.items.map(SellerProductView::id))
             .doesNotContain(unexpected)
+    }
+
+    @Test
+    fun `상품 정보를 올바르게 반환한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.createSellerThenSetAsDefaultUser()
+        val command = RegisterProductCommandGenerator.generate()
+        val productId = fixture.registerProduct(command)
+
+        // Act
+        val response =
+            fixture.client.exchange(
+                RequestEntity.get("/seller/products").build(),
+                object : ParameterizedTypeReference<ArrayCarrier<SellerProductView>>() {},
+            )
+
+        // Assert
+        val body =
+            response.body
+                ?: error("Response body is null")
+        val actual = body.items[0]
+        assertThat(actual).satisfies(ProductAssertions.isDerivedFrom(command))
     }
 }
