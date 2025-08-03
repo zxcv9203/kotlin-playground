@@ -67,17 +67,8 @@ class SellerProductsController(
         productRepository
             .findById(id)
             ?.takeIf { it.sellerId == UUID.fromString(user.name) }
-            ?.let {
-                SellerProductView(
-                    id = it.id,
-                    name = it.name,
-                    description = it.description,
-                    priceAmount = it.priceAmount,
-                    imageUri = it.imageUri,
-                    stockQuantity = it.stockQuantity,
-                    registeredTimeUtc = it.registeredTimeUtc,
-                )
-            }?.let { ResponseEntity.ok(it) }
+            ?.let { convertToView(it) }
+            ?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.notFound().build()
 
     @GetMapping("/seller/products")
@@ -86,17 +77,19 @@ class SellerProductsController(
         val response =
             productRepository
                 .findBySellerId(sellerId)
-                .map { product ->
-                    SellerProductView(
-                        id = product.id,
-                        name = product.name,
-                        description = product.description,
-                        priceAmount = product.priceAmount,
-                        imageUri = product.imageUri,
-                        stockQuantity = product.stockQuantity,
-                        registeredTimeUtc = product.registeredTimeUtc,
-                    )
-                }.toTypedArray()
+                .map { convertToView(it) }
+                .toTypedArray()
         return ResponseEntity.ok(ArrayCarrier(response))
     }
+
+    private fun convertToView(product: Product): SellerProductView =
+        SellerProductView(
+            id = product.id,
+            name = product.name,
+            description = product.description,
+            priceAmount = product.priceAmount,
+            imageUri = product.imageUri,
+            stockQuantity = product.stockQuantity,
+            registeredTimeUtc = product.registeredTimeUtc,
+        )
 }

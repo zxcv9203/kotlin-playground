@@ -1,6 +1,7 @@
 package org.example.tdd.api.seller.products
 
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.within
 import org.example.tdd.RegisterProductCommandGenerator
 import org.example.tdd.api.CommerceApiTest
 import org.example.tdd.api.ProductAssertions
@@ -13,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpStatus
 import org.springframework.http.RequestEntity
+import java.time.LocalDateTime
+import java.time.ZoneOffset.UTC
+import java.time.temporal.ChronoUnit
 
 @CommerceApiTest
 @DisplayName("GET /seller/products")
@@ -105,5 +109,30 @@ class GetSpecs {
                 ?: error("Response body is null")
         val actual = body.items[0]
         assertThat(actual).satisfies(ProductAssertions.isDerivedFrom(command))
+    }
+
+    @Test
+    fun `상품 등록 시각을 올바르게 반환한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.createSellerThenSetAsDefaultUser()
+        val now = LocalDateTime.now(UTC)
+        val command = RegisterProductCommandGenerator.generate()
+        fixture.registerProduct(command)
+
+        // Act
+        val response =
+            fixture.client.exchange(
+                RequestEntity.get("/seller/products").build(),
+                object : ParameterizedTypeReference<ArrayCarrier<SellerProductView>>() {},
+            )
+
+        // Assert
+        val body =
+            response.body
+                ?: error("Response body is null")
+        val actual = body.items[0]
+        assertThat(actual.registeredTimeUtc).isCloseTo(now, within(1, ChronoUnit.SECONDS))
     }
 }
