@@ -135,4 +135,31 @@ class GetSpecs {
         val actual = body.items[0]
         assertThat(actual.registeredTimeUtc).isCloseTo(now, within(1, ChronoUnit.SECONDS))
     }
+
+    @Test
+    fun `상품 목록을 등록 시점 역순으로 정렬한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.createSellerThenSetAsDefaultUser()
+        fixture.registerProducts()
+
+        // Act
+        val response =
+            fixture.client.exchange(
+                RequestEntity.get("/seller/products").build(),
+                object : ParameterizedTypeReference<ArrayCarrier<SellerProductView>>() {},
+            )
+
+        // Assert
+        val body =
+            response.body
+                ?: error("Response body is null")
+        val registeredTimeUtc =
+            body
+                .items
+                .map(SellerProductView::registeredTimeUtc)
+        assertThat(registeredTimeUtc)
+            .isSortedAccordingTo(Comparator.reverseOrder())
+    }
 }

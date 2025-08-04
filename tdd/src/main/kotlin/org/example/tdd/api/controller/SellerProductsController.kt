@@ -77,6 +77,7 @@ class SellerProductsController(
         val response =
             productRepository
                 .findBySellerId(sellerId)
+                .sortedByDescending { it.registeredTimeUtc }
                 .map { convertToView(it) }
                 .toTypedArray()
         return ResponseEntity.ok(ArrayCarrier(response))
