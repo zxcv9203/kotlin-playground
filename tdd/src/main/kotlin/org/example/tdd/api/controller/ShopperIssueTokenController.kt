@@ -34,6 +34,7 @@ class ShopperIssueTokenController(
         Jwts
             .builder()
             .setSubject(shopper.id.toString())
+            .claim("scp", "shopper")
             .signWith(jwtKeyHolder.key)
             .compact()
 }

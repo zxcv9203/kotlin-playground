@@ -33,4 +33,23 @@ class GETSpecs {
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.OK)
     }
+
+    @Test
+    fun `판매자 접근 토큰을 사용하면 403 Forbidden 상태코드를 반환한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.createSellerThenSetAsDefaultUser()
+
+        // Act
+        val response =
+            fixture.client
+                .exchange(
+                    RequestEntity.get("/shopper/products").build(),
+                    object : ParameterizedTypeReference<PageCarrier<ProductView>>() {},
+                )
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.FORBIDDEN)
+    }
 }

@@ -46,6 +46,8 @@ class SecurityConfig {
                     ).permitAll()
                     .requestMatchers("/seller/**")
                     .access(hasScope("seller"))
+                    .requestMatchers("/shopper/**")
+                    .access(hasScope("shopper"))
                     .anyRequest()
                     .authenticated()
             }.build()
