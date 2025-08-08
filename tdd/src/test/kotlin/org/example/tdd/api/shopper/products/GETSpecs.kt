@@ -52,4 +52,29 @@ class GETSpecs {
         // Assert
         assertThat(response.statusCode).isEqualTo(HttpStatus.FORBIDDEN)
     }
+
+    @Test
+    fun `첫 번째 페이지의 상품을 반환한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.deleteAllProducts()
+        fixture.createSellerThenSetAsDefaultUser()
+        val productIds = fixture.registerProducts(10)
+        fixture.createShopperThenSetAsDefaultUser()
+
+        // Act
+        val response =
+            fixture.client
+                .exchange(
+                    RequestEntity.get("/shopper/products").build(),
+                    object : ParameterizedTypeReference<PageCarrier<ProductView>>() {},
+                )
+
+        // Assert
+        val actual = response.body
+        assertThat(actual).isNotNull
+        val extractProductIds = actual!!.items.map(ProductView::id)
+        assertThat(extractProductIds).containsAll(productIds)
+    }
 }

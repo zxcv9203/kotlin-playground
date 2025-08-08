@@ -1,5 +1,6 @@
 package org.example.tdd.api
 
+import org.example.tdd.ProductRepository
 import org.example.tdd.RegisterProductCommandGenerator
 import org.example.tdd.api.seller.signup.EmailGenerator
 import org.example.tdd.api.seller.signup.PasswordGenerator
@@ -19,14 +20,18 @@ import java.util.UUID
 
 class TestFixture(
     val client: TestRestTemplate,
+    val productRepository: ProductRepository,
 ) {
     companion object {
-        fun create(environment: Environment): TestFixture {
+        fun create(
+            environment: Environment,
+            productRepository: ProductRepository,
+        ): TestFixture {
             val client = TestRestTemplate()
             val handler = LocalHostUriTemplateHandler(environment)
             client.setUriTemplateHandler(handler)
 
-            return TestFixture(client)
+            return TestFixture(client, productRepository)
         }
     }
 
@@ -156,10 +161,11 @@ class TestFixture(
         return UUID.fromString(id)
     }
 
-    fun registerProducts(): List<UUID> =
-        listOf(
-            registerProduct(),
-            registerProduct(),
-            registerProduct(),
-        )
+    fun registerProducts(count: Int = 3): List<UUID> =
+        (1..count)
+            .map { registerProduct() }
+
+    fun deleteAllProducts() {
+        productRepository.deleteAllInBatch()
+    }
 }
