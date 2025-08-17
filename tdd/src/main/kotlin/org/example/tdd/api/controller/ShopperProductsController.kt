@@ -16,6 +16,7 @@ class ShopperProductsController(
     fun getProducts(): PageCarrier<ProductView> =
         productRepository
             .findAll()
+            .sortedByDescending { it.dataKey }
             .map {
                 ProductView(
                     id = it.id,

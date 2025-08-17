@@ -77,4 +77,29 @@ class GETSpecs {
         val extractProductIds = actual!!.items.map(ProductView::id)
         assertThat(extractProductIds).containsAll(productIds)
     }
+
+    @Test
+    fun `상품 목록을 등록 시점 역순으로 정렬한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        fixture.deleteAllProducts()
+
+        fixture.createSellerThenSetAsDefaultUser()
+        val id1 = fixture.registerProduct()
+        val id2 = fixture.registerProduct()
+        val id3 = fixture.registerProduct()
+
+        fixture.createShopperThenSetAsDefaultUser()
+
+        val response =
+            fixture.client.exchange(
+                RequestEntity.get("/shopper/products").build(),
+                object : ParameterizedTypeReference<PageCarrier<ProductView>>() {},
+            )
+
+        val actual = response.body
+        assertThat(actual).isNotNull
+        val extractProductIds = actual!!.items.map(ProductView::id)
+        assertThat(extractProductIds).containsExactly(id3, id2, id1)
+    }
 }
