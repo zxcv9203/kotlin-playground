@@ -1,7 +1,9 @@
 package org.example.tdd.api.shopper.products
 
 import org.assertj.core.api.Assertions.assertThat
+import org.example.tdd.RegisterProductCommandGenerator
 import org.example.tdd.api.CommerceApiTest
+import org.example.tdd.api.ProductAssertions
 import org.example.tdd.api.TestFixture
 import org.example.tdd.result.PageCarrier
 import org.example.tdd.view.ProductView
@@ -101,5 +103,27 @@ class GETSpecs {
         assertThat(actual).isNotNull
         val extractProductIds = actual!!.items.map(ProductView::id)
         assertThat(extractProductIds).containsExactly(id3, id2, id1)
+    }
+
+    @Test
+    fun `상품 정보를 올바르게 반환한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        fixture.deleteAllProducts()
+
+        fixture.createSellerThenSetAsDefaultUser()
+        val command = RegisterProductCommandGenerator.generate()
+        fixture.registerProduct(command)
+
+        fixture.createShopperThenSetAsDefaultUser()
+
+        val response =
+            fixture.client.exchange(
+                RequestEntity.get("/shopper/products").build(),
+                object : ParameterizedTypeReference<PageCarrier<ProductView>>() {},
+            )
+
+        val actual = response.body!!.items[0]
+        assertThat(actual).satisfies(ProductAssertions.isViewDerivedFrom(command))
     }
 }
