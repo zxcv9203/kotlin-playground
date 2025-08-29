@@ -9,9 +9,11 @@ import org.example.tdd.result.PageCarrier
 import org.example.tdd.view.ProductView
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.web.client.exchange
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpStatus
 import org.springframework.http.RequestEntity
+import org.springframework.http.RequestEntity.get
 import kotlin.test.Test
 
 @CommerceApiTest
@@ -125,5 +127,33 @@ class GETSpecs {
 
         val actual = response.body!!.items[0]
         assertThat(actual).satisfies(ProductAssertions.isViewDerivedFrom(command))
+    }
+
+    @Test
+    fun `판매자 정보를 올바르게 반환한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.deleteAllProducts()
+        fixture.createSellerThenSetAsDefaultUser()
+        val seller = fixture.getSeller()
+        fixture.registerProduct()
+
+        fixture.createShopperThenSetAsDefaultUser()
+
+        // Act
+        val response =
+            fixture
+                .client
+                .exchange<PageCarrier<ProductView>>(
+                    get("/shopper/products").build(),
+                )
+
+        // Assert
+        val body = response.body!!
+        val actual = body.items[0].seller
+        assertThat(actual).isNotNull
+        assertThat(actual.id).isEqualTo(seller.id)
+        assertThat(actual.username).isEqualTo(seller.username)
     }
 }

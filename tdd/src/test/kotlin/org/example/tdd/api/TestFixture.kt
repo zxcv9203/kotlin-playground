@@ -11,8 +11,10 @@ import org.example.tdd.command.RegisterProductCommand
 import org.example.tdd.query.IssueSellerToken
 import org.example.tdd.query.IssueShopperToken
 import org.example.tdd.result.AccessTokenCarrier
+import org.example.tdd.view.SellerMeView
 import org.springframework.boot.test.web.client.LocalHostUriTemplateHandler
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.boot.test.web.client.getForObject
 import org.springframework.boot.test.web.client.postForEntity
 import org.springframework.boot.test.web.client.postForObject
 import org.springframework.core.env.Environment
@@ -168,4 +170,6 @@ class TestFixture(
     fun deleteAllProducts() {
         productRepository.deleteAllInBatch()
     }
+
+    fun getSeller(): SellerMeView = client.getForObject("/seller/me") ?: throw IllegalStateException("Seller view is null")
 }
