@@ -11,13 +11,17 @@ import org.example.tdd.command.RegisterProductCommand
 import org.example.tdd.query.IssueSellerToken
 import org.example.tdd.query.IssueShopperToken
 import org.example.tdd.result.AccessTokenCarrier
+import org.example.tdd.result.PageCarrier
+import org.example.tdd.view.ProductView
 import org.example.tdd.view.SellerMeView
 import org.springframework.boot.test.web.client.LocalHostUriTemplateHandler
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.boot.test.web.client.exchange
 import org.springframework.boot.test.web.client.getForObject
 import org.springframework.boot.test.web.client.postForEntity
 import org.springframework.boot.test.web.client.postForObject
 import org.springframework.core.env.Environment
+import org.springframework.http.RequestEntity.get
 import java.util.UUID
 
 class TestFixture(
@@ -172,4 +176,12 @@ class TestFixture(
     }
 
     fun getSeller(): SellerMeView = client.getForObject("/seller/me") ?: throw IllegalStateException("Seller view is null")
+
+    fun consumeProductPage(): String {
+        val response =
+            client.exchange<PageCarrier<ProductView>>(
+                get("/shopper/products?page=2").build(),
+            )
+        return response.body!!.continuationToken
+    }
 }

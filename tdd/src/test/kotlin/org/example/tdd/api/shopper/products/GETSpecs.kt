@@ -156,4 +156,33 @@ class GETSpecs {
         assertThat(actual.id).isEqualTo(seller.id)
         assertThat(actual.username).isEqualTo(seller.username)
     }
+
+    @Test
+    fun `두 번째 페이지를 올바르게 반환한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.deleteAllProducts()
+        fixture.createSellerThenSetAsDefaultUser()
+        fixture.registerProducts(10)
+
+        val ids =
+            fixture
+                .registerProducts(10)
+                .reversed()
+        fixture.registerProducts(10)
+
+        fixture.createShopperThenSetAsDefaultUser()
+        val token = fixture.consumeProductPage()
+
+        // Act
+        val response =
+            fixture.client.exchange<PageCarrier<ProductView>>(
+                get("/shopper/products?continuationToken=$token").build(),
+            )
+
+        // Assert
+        assertThat(response.body!!.items.map(ProductView::id))
+            .containsExactlyElementsOf(ids)
+    }
 }
