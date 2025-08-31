@@ -218,4 +218,28 @@ class GETSpecs {
             .containsExactlyElementsOf(ids)
         assertThat(response.body!!.continuationToken).isNull()
     }
+
+    @Test
+    fun `continuationToken 매개변수에 빈 문자열이 지정되면 첫 번째 페이지를 반환한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.deleteAllProducts()
+
+        fixture.createSellerThenSetAsDefaultUser()
+        val ids = fixture.registerProducts(10)
+
+        fixture.createShopperThenSetAsDefaultUser()
+        val token = ""
+
+        // Act
+        val response =
+            fixture.client.exchange<PageCarrier<ProductView>>(
+                get("/shopper/products?continuationToken=$token").build(),
+            )
+
+        // Assert
+        assertThat(response.body!!.items.map(ProductView::id))
+            .containsExactlyElementsOf(ids.reversed())
+    }
 }
