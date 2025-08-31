@@ -177,11 +177,22 @@ class TestFixture(
 
     fun getSeller(): SellerMeView = client.getForObject("/seller/me") ?: throw IllegalStateException("Seller view is null")
 
-    fun consumeProductPage(): String {
+    fun consumeProductPage(): String? {
         val response =
             client.exchange<PageCarrier<ProductView>>(
                 get("/shopper/products?page=2").build(),
             )
+        return response.body!!.continuationToken
+    }
+
+    fun consumeTwoProductPages(): String? {
+        val token = consumeProductPage()
+
+        val response =
+            client.exchange<PageCarrier<ProductView>>(
+                get("/shopper/products?continuationToken=$token").build(),
+            )
+
         return response.body!!.continuationToken
     }
 }

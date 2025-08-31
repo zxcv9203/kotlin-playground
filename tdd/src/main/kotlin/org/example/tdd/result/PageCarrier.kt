@@ -2,7 +2,7 @@ package org.example.tdd.result
 
 data class PageCarrier<T>(
     val items: Array<T>,
-    val continuationToken: String,
+    val continuationToken: String?,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

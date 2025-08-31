@@ -8,6 +8,8 @@ import org.example.tdd.api.TestFixture
 import org.example.tdd.result.PageCarrier
 import org.example.tdd.view.ProductView
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.web.client.exchange
 import org.springframework.core.ParameterizedTypeReference
@@ -184,5 +186,36 @@ class GETSpecs {
         // Assert
         assertThat(response.body!!.items.map(ProductView::id))
             .containsExactlyElementsOf(ids)
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [1, 10])
+    fun `마지막 페이지를 올바르게 반환한다`(
+        page: Int,
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.deleteAllProducts()
+
+        fixture.createSellerThenSetAsDefaultUser()
+        val ids =
+            fixture
+                .registerProducts(page)
+                .reversed()
+        fixture.registerProducts(10 * 2)
+
+        fixture.createShopperThenSetAsDefaultUser()
+        val token = fixture.consumeTwoProductPages()
+
+        // Act
+        val response =
+            fixture.client.exchange<PageCarrier<ProductView>>(
+                get("/shopper/products?continuationToken=$token").build(),
+            )
+
+        // Assert
+        assertThat(response.body!!.items.map(ProductView::id))
+            .containsExactlyElementsOf(ids)
+        assertThat(response.body!!.continuationToken).isNull()
     }
 }

@@ -54,9 +54,8 @@ class ShopperProductsController(
                     )
                 }.toTypedArray()
 
-        val next = results.last().product.dataKey
-        return items
-            .let { PageCarrier(it, encodeCursor(next)) }
+        val next = if (results.size <= pageSize) null else results.last().product.dataKey
+        return PageCarrier(items, encodeCursor(next))
     }
 
     private fun decodeCursor(continuationToken: String?): Long? {
@@ -69,9 +68,13 @@ class ShopperProductsController(
             .toLong()
     }
 
-    private fun encodeCursor(cursor: Long): String =
-        cursor
+    private fun encodeCursor(cursor: Long?): String? {
+        if (cursor == null) {
+            return null
+        }
+        return cursor
             .toString()
             .toByteArray(UTF_8)
             .let { Base64.getEncoder().encodeToString(it) }
+    }
 }
