@@ -3,6 +3,7 @@ package org.example.tdd.api.controller
 import org.example.tdd.Product
 import org.example.tdd.ProductRepository
 import org.example.tdd.command.RegisterProductCommand
+import org.example.tdd.model.command.InvalidCommandException
 import org.example.tdd.view.ArrayCarrier
 import org.example.tdd.view.SellerProductView
 import org.springframework.http.HttpStatus
@@ -28,7 +29,7 @@ class SellerProductsController(
         user: Principal,
     ): ResponseEntity<Unit> {
         if (!isValidUri(command.imageUri)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+            throw InvalidCommandException()
         }
         val id = UUID.randomUUID()
         val product =
