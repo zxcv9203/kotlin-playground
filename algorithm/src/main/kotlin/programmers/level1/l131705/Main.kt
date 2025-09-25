@@ -1,10 +1,10 @@
-package programmers.level0.l131705
+package programmers.level1.l131705
 
-fun solution(number: IntArray): Int {
-    return number.indices.toList()
+fun solution(number: IntArray): Int =
+    number.indices
+        .toList()
         .combinations(3)
         .count { (i, j, k) -> number[i] + number[j] + number[k] == 0 }
-}
 
 private fun <T> List<T>.combinations(r: Int): List<List<T>> {
     if (r == 0) return listOf(emptyList())
@@ -12,7 +12,10 @@ private fun <T> List<T>.combinations(r: Int): List<List<T>> {
 
     val result = mutableListOf<List<T>>()
 
-    fun backtrack(start: Int, current: MutableList<T>) {
+    fun backtrack(
+        start: Int,
+        current: MutableList<T>,
+    ) {
         if (current.size == r) {
             result.add(current.toList())
             return
