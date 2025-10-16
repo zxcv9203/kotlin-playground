@@ -3,10 +3,9 @@ package org.example.tdd.api.controller
 import org.example.tdd.Product
 import org.example.tdd.ProductRepository
 import org.example.tdd.command.RegisterProductCommand
-import org.example.tdd.model.command.InvalidCommandException
+import org.example.tdd.commandmodel.RegisterProductCommandExecutor
 import org.example.tdd.view.ArrayCarrier
 import org.example.tdd.view.SellerProductView
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -15,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import java.net.URI
 import java.security.Principal
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.util.UUID
 
 @RestController
@@ -28,36 +25,15 @@ class SellerProductsController(
         @RequestBody command: RegisterProductCommand,
         user: Principal,
     ): ResponseEntity<Unit> {
-        if (!isValidUri(command.imageUri)) {
-            throw InvalidCommandException()
-        }
         val id = UUID.randomUUID()
-        val product =
-            Product(
-                id = id,
-                sellerId = UUID.fromString(user.name),
-                name = command.name,
-                description = command.description,
-                priceAmount = command.priceAmount,
-                imageUri = command.imageUri,
-                stockQuantity = command.stockQuantity,
-                registeredTimeUtc = LocalDateTime.now(ZoneOffset.UTC),
-            )
-        productRepository.save(product)
+        val sellerId = UUID.fromString(user.name)
+        val executor = RegisterProductCommandExecutor(productRepository::save)
+        executor.execute(id, sellerId, command)
 
         val location = URI.create("/seller/products/$id")
         return ResponseEntity
             .created(location)
             .build()
-    }
-
-    private fun isValidUri(imageUri: String): Boolean {
-        try {
-            val uri = URI.create(imageUri)
-            return uri.host != null
-        } catch (_: IllegalArgumentException) {
-            return false
-        }
     }
 
     @GetMapping("/seller/products/{id}")
