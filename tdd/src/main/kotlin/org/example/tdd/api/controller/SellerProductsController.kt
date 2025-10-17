@@ -1,9 +1,12 @@
 package org.example.tdd.api.controller
 
-import org.example.tdd.Product
 import org.example.tdd.ProductRepository
 import org.example.tdd.command.RegisterProductCommand
 import org.example.tdd.commandmodel.RegisterProductCommandExecutor
+import org.example.tdd.query.FindSellerProduct
+import org.example.tdd.query.FindSellerProducts
+import org.example.tdd.querymodel.FindSellerProductQueryProcessor
+import org.example.tdd.querymodel.FindSellerProductsQueryProcessor
 import org.example.tdd.view.ArrayCarrier
 import org.example.tdd.view.SellerProductView
 import org.springframework.http.ResponseEntity
@@ -37,37 +40,23 @@ class SellerProductsController(
     }
 
     @GetMapping("/seller/products/{id}")
-    fun findProducts(
+    fun findProduct(
         @PathVariable id: UUID,
         user: Principal,
-    ): ResponseEntity<SellerProductView> =
-        productRepository
-            .findById(id)
-            ?.takeIf { it.sellerId == UUID.fromString(user.name) }
-            ?.let { convertToView(it) }
+    ): ResponseEntity<SellerProductView> {
+        val processor = FindSellerProductQueryProcessor(productRepository::findById)
+        val query = FindSellerProduct(UUID.fromString(user.name), id)
+        return processor
+            .process(query)
             ?.let { ResponseEntity.ok(it) }
             ?: ResponseEntity.notFound().build()
+    }
 
     @GetMapping("/seller/products")
     fun findProductsById(user: Principal): ResponseEntity<ArrayCarrier<SellerProductView>> {
-        val sellerId = UUID.fromString(user.name)
-        val response =
-            productRepository
-                .findBySellerId(sellerId)
-                .sortedByDescending { it.registeredTimeUtc }
-                .map { convertToView(it) }
-                .toTypedArray()
+        val processor = FindSellerProductsQueryProcessor(productRepository::findBySellerId)
+        val query = FindSellerProducts(UUID.fromString(user.name))
+        val response = processor.process(query)
         return ResponseEntity.ok(ArrayCarrier(response))
     }
-
-    private fun convertToView(product: Product): SellerProductView =
-        SellerProductView(
-            id = product.id,
-            name = product.name,
-            description = product.description,
-            priceAmount = product.priceAmount,
-            imageUri = product.imageUri,
-            stockQuantity = product.stockQuantity,
-            registeredTimeUtc = product.registeredTimeUtc,
-        )
 }
