@@ -1,4 +1,4 @@
-package org.example.tdd.api.controller
+package org.example.tdd.querymodel
 
 import org.example.tdd.Product
 import org.example.tdd.Seller
