@@ -8,5 +8,22 @@ object UserPropertyValidator {
 
     fun isUsernameValid(username: String?): Boolean = username != null && username.matches(Regex(USERNAME_REGEX))
 
-    fun isPasswordValid(password: String?): Boolean = password != null && password.length >= 8
+    fun isPasswordValid(password: String?): Boolean =
+        password != null &&
+            password.length >= 8 &&
+            contains4SequentialChars(password).not()
+
+    private fun contains4SequentialChars(password: String): Boolean {
+        for (i in 0..password.length - 4) {
+            val first = password[i].code
+            val second = password[i + 1].code
+            val third = password[i + 2].code
+            val fourth = password[i + 3].code
+
+            if (second == first + 1 && third == second + 1 && fourth == third + 1) {
+                return true
+            }
+        }
+        return false
+    }
 }

@@ -6,6 +6,9 @@ object TestDataSource {
         listOf(
             "",
             "pass",
-            "1234567",
+            "pass123",
+            "1234password",
+            "password1234",
+            "pass5678word",
         )
 }
