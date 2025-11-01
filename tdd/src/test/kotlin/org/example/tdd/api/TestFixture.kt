@@ -22,6 +22,7 @@ import org.springframework.boot.test.web.client.postForEntity
 import org.springframework.boot.test.web.client.postForObject
 import org.springframework.core.env.Environment
 import org.springframework.http.RequestEntity.get
+import org.springframework.http.ResponseEntity
 import java.util.UUID
 
 class TestFixture(
@@ -52,8 +53,23 @@ class TestFixture(
                 username = username,
                 password = password,
             )
-        client
-            .postForEntity<Unit>("/shopper/signup", command)
+        ensureSuccessful(
+            client.postForEntity<Unit>("/shopper/signup", command),
+            command,
+        )
+    }
+
+    private fun ensureSuccessful(
+        response: ResponseEntity<Unit>,
+        request: Any,
+    ) {
+        if (!response.statusCode.is2xxSuccessful) {
+            val message =
+                """
+                Request with $request failed with status code ${response.statusCode}
+                """.trimIndent()
+            throw RuntimeException(message)
+        }
     }
 
     fun issueShopperToken(
@@ -122,7 +138,10 @@ class TestFixture(
                 username = username,
                 password = password,
             )
-        client.postForEntity<Unit>("/seller/signup", command)
+        ensureSuccessful(
+            client.postForEntity<Unit>("/seller/signup", command),
+            command,
+        )
     }
 
     private fun setSellerAsDefaultUser(
