@@ -5,4 +5,5 @@ import java.util.UUID
 data class SellerView(
     val id: UUID,
     val username: String,
+    val contactEmail: String?,
 )

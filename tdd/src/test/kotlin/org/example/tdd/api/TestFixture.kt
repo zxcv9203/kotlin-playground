@@ -137,6 +137,7 @@ class TestFixture(
                 email = email,
                 username = username,
                 password = password,
+                contactEmail = EmailGenerator.generateEmail(),
             )
         ensureSuccessful(
             client.postForEntity<Unit>("/seller/signup", command),

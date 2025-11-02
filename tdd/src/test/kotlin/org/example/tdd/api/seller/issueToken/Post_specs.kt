@@ -33,6 +33,7 @@ class PostSpecs {
                 email = email,
                 username = UsernameGenerator.generate(),
                 password = password,
+                contactEmail = EmailGenerator.generateEmail(),
             ),
             Unit::class,
         )
@@ -65,6 +66,7 @@ class PostSpecs {
                 email = email,
                 username = UsernameGenerator.generate(),
                 password = password,
+                contactEmail = EmailGenerator.generateEmail(),
             ),
             Unit::class,
         )
@@ -97,6 +99,7 @@ class PostSpecs {
                 email = email,
                 username = UsernameGenerator.generate(),
                 password = password,
+                contactEmail = EmailGenerator.generateEmail(),
             ),
             Unit::class,
         )
@@ -152,6 +155,7 @@ class PostSpecs {
                 email = email,
                 username = UsernameGenerator.generate(),
                 password = password,
+                contactEmail = EmailGenerator.generateEmail(),
             ),
             Unit::class,
         )

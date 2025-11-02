@@ -5,7 +5,7 @@ import org.example.tdd.view.SellerMeView
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import java.security.Principal
-import java.util.*
+import java.util.UUID
 
 @RestController
 class SellerMeController(
@@ -21,6 +21,7 @@ class SellerMeController(
             id = id,
             email = seller.email,
             username = seller.username,
+            null,
         )
     }
 }

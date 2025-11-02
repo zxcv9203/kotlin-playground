@@ -4,4 +4,5 @@ data class CreateSellerCommand(
     val email: String?,
     val password: String?,
     val username: String?,
+    val contactEmail: String?,
 )

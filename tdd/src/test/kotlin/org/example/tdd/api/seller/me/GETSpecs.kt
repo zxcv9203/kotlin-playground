@@ -34,6 +34,7 @@ class GETSpecs {
                 email = email,
                 username = username,
                 password = password,
+                contactEmail = EmailGenerator.generateEmail(),
             )
         client.postForEntity<Unit>("/seller/signup", command)
 
@@ -84,6 +85,7 @@ class GETSpecs {
                 email = email1,
                 username = username1,
                 password = password1,
+                contactEmail = EmailGenerator.generateEmail(),
             )
         client.postForEntity<Unit>("/seller/signup", command1)
 
@@ -104,6 +106,7 @@ class GETSpecs {
                 email = email2,
                 username = username2,
                 password = password2,
+                contactEmail = EmailGenerator.generateEmail(),
             )
         client.postForEntity<Unit>("/seller/signup", command2)
 
@@ -154,6 +157,7 @@ class GETSpecs {
                 email = email,
                 username = username,
                 password = password,
+                contactEmail = EmailGenerator.generateEmail(),
             )
         client.postForEntity<Unit>("/seller/signup", command)
 
@@ -201,6 +205,7 @@ class GETSpecs {
                 email = email,
                 username = username,
                 password = password,
+                contactEmail = EmailGenerator.generateEmail(),
             )
         client.postForEntity<Unit>("/seller/signup", command)
         val carrier =

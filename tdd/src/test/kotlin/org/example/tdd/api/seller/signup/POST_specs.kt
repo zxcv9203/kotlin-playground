@@ -31,6 +31,7 @@ class PostSpecs {
                 email = EmailGenerator.generateEmail(),
                 password = "password",
                 username = UsernameGenerator.generate(),
+                contactEmail = EmailGenerator.generateEmail(),
             )
 
         // Act
@@ -50,6 +51,7 @@ class PostSpecs {
                 email = null,
                 password = "password",
                 username = UsernameGenerator.generate(),
+                contactEmail = EmailGenerator.generateEmail(),
             )
         val headers =
             HttpHeaders()
@@ -83,6 +85,7 @@ class PostSpecs {
                 email = email,
                 password = "password",
                 username = UsernameGenerator.generate(),
+                contactEmail = EmailGenerator.generateEmail(),
             )
 
         // Act
@@ -102,6 +105,7 @@ class PostSpecs {
                 email = EmailGenerator.generateEmail(),
                 password = "password",
                 username = null,
+                contactEmail = EmailGenerator.generateEmail(),
             )
 
         val headers =
@@ -136,6 +140,7 @@ class PostSpecs {
                 email = EmailGenerator.generateEmail(),
                 password = "password",
                 username = username,
+                contactEmail = EmailGenerator.generateEmail(),
             )
 
         // Act
@@ -165,6 +170,7 @@ class PostSpecs {
                 email = EmailGenerator.generateEmail(),
                 password = "password",
                 username = username,
+                contactEmail = EmailGenerator.generateEmail(),
             )
 
         // Act
@@ -184,6 +190,7 @@ class PostSpecs {
                 email = EmailGenerator.generateEmail(),
                 password = null,
                 username = UsernameGenerator.generate(),
+                contactEmail = EmailGenerator.generateEmail(),
             )
         val headers =
             HttpHeaders()
@@ -207,6 +214,7 @@ class PostSpecs {
                 email = EmailGenerator.generateEmail(),
                 password = password,
                 username = UsernameGenerator.generate(),
+                contactEmail = EmailGenerator.generateEmail(),
             )
         // Act
         val response = client.postForEntity<Unit>("/seller/signup", command, Unit::class)
@@ -226,6 +234,7 @@ class PostSpecs {
                 email = email,
                 password = "password",
                 username = UsernameGenerator.generate(),
+                contactEmail = EmailGenerator.generateEmail(),
             ),
             Unit::class,
         )
@@ -238,6 +247,7 @@ class PostSpecs {
                     email = email,
                     password = "password",
                     username = UsernameGenerator.generate(),
+                    contactEmail = EmailGenerator.generateEmail(),
                 ),
                 Unit::class,
             )
@@ -258,6 +268,7 @@ class PostSpecs {
                 email = EmailGenerator.generateEmail(),
                 password = "password",
                 username = username,
+                contactEmail = EmailGenerator.generateEmail(),
             ),
             Unit::class,
         )
@@ -270,6 +281,7 @@ class PostSpecs {
                     email = EmailGenerator.generateEmail(),
                     password = "password",
                     username = username,
+                    contactEmail = EmailGenerator.generateEmail(),
                 ),
                 Unit::class,
             )
@@ -291,6 +303,7 @@ class PostSpecs {
                 email = EmailGenerator.generateEmail(),
                 password = password,
                 username = UsernameGenerator.generate(),
+                contactEmail = EmailGenerator.generateEmail(),
             )
 
         // Act

@@ -44,6 +44,7 @@ class GetProductPageQueryProcessor(
                             SellerView(
                                 id = tuple.seller.id,
                                 username = tuple.seller.username,
+                                contactEmail = null,
                             ),
                     )
                 }.toTypedArray()
