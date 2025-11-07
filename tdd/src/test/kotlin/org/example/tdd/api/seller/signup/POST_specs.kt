@@ -320,4 +320,26 @@ class PostSpecs {
         assertThat(actual).isNotNull
         assertThat(passwordEncoder.matches(command.password, actual)).isTrue
     }
+
+    @ParameterizedTest
+    @MethodSource("org.example.tdd.TestDataSource#invalidEmails")
+    fun `contactEmail 속성이 올바르게 지정되지 않으면 400 Bad Request 상태코드를 반환한다`(
+        contactEmail: String,
+        @Autowired client: TestRestTemplate,
+    ) {
+        // Arrange
+        val command =
+            CreateSellerCommand(
+                email = EmailGenerator.generateEmail(),
+                password = "password",
+                username = UsernameGenerator.generate(),
+                contactEmail = contactEmail,
+            )
+
+        // Act
+        val response = client.postForEntity<Unit>("/seller/signup", command, Unit::class)
+
+        // Assert
+        assertThat(response.statusCode).isEqualTo(HttpStatus.BAD_REQUEST)
+    }
 }

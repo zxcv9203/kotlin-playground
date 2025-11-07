@@ -11,4 +11,15 @@ object TestDataSource {
             "password1234",
             "pass5678word",
         )
+
+    @JvmStatic
+    fun invalidEmails() =
+        listOf(
+            "",
+            "invalid-contact-email",
+            "contact-email@",
+            "contact-email@test",
+            "contact@test.",
+            "contact@.com",
+        )
 }
