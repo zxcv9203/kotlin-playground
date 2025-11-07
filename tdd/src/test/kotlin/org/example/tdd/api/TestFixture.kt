@@ -127,17 +127,18 @@ class TestFixture(
         setSellerAsDefaultUser(email, password)
     }
 
-    private fun createSeller(
+    fun createSeller(
         email: String,
         username: String,
         password: String,
+        contactEmail: String = EmailGenerator.generateEmail(),
     ) {
         val command =
             CreateSellerCommand(
                 email = email,
                 username = username,
                 password = password,
-                contactEmail = EmailGenerator.generateEmail(),
+                contactEmail = contactEmail,
             )
         ensureSuccessful(
             client.postForEntity<Unit>("/seller/signup", command),

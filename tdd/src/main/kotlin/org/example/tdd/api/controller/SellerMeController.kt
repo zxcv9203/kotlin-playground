@@ -21,7 +21,7 @@ class SellerMeController(
             id = id,
             email = seller.email,
             username = seller.username,
-            null,
+            contactEmail = seller.contactEmail,
         )
     }
 }

@@ -6,5 +6,5 @@ data class SellerMeView(
     val id: UUID,
     val email: String,
     val username: String,
-    val contactEmail: String?,
+    val contactEmail: String,
 )

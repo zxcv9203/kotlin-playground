@@ -2,6 +2,7 @@ package org.example.tdd.api.seller.me
 
 import org.assertj.core.api.Assertions.assertThat
 import org.example.tdd.api.CommerceApiTest
+import org.example.tdd.api.TestFixture
 import org.example.tdd.api.seller.signup.EmailGenerator
 import org.example.tdd.api.seller.signup.PasswordGenerator
 import org.example.tdd.api.seller.signup.UsernameGenerator
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.client.postForEntity
+import org.springframework.boot.test.web.client.postForObject
 import org.springframework.http.HttpStatus
 import org.springframework.http.RequestEntity.get
 import kotlin.test.Test
@@ -227,5 +229,39 @@ class GETSpecs {
         assertThat(response.body).isNotNull
         assertThat(response.body!!.email).isEqualTo(email)
         assertThat(response.body!!.username).isEqualTo(username)
+    }
+
+    @Test
+    fun `문의 이메일 주소를 올바르게 설정한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        val email = EmailGenerator.generateEmail()
+        val username = UsernameGenerator.generate()
+        val password = PasswordGenerator.generate()
+        val contactEmail = EmailGenerator.generateEmail()
+        fixture.createSeller(email, username, password, contactEmail)
+
+        val carrier =
+            fixture.client
+                .postForObject<AccessTokenCarrier>(
+                    "/seller/issueToken",
+                    IssueSellerToken(email, password),
+                )
+        val token = carrier!!.accessToken
+
+        // Act
+        val response =
+            fixture.client
+                .exchange(
+                    get("/seller/me")
+                        .header("Authorization", "Bearer $token")
+                        .build(),
+                    SellerMeView::class.java,
+                )
+
+        // Assert
+        assertThat(response.body).isNotNull
+        assertThat(response.body!!.contactEmail).isEqualTo(contactEmail)
     }
 }

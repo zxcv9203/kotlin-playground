@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
-import java.util.*
+import java.util.UUID
 
 @RestController
 class SellerSignupController(
@@ -29,6 +29,7 @@ class SellerSignupController(
                 username = command.username!!,
                 hashedPassword = passwordEncoder.encode(command.password),
                 id = UUID.randomUUID(),
+                contactEmail = command.contactEmail!!,
             )
         sellerRepository.save(seller)
         return ResponseEntity.noContent().build()
