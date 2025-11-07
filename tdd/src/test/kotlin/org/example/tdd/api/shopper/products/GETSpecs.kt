@@ -242,4 +242,32 @@ class GETSpecs {
         assertThat(response.body!!.items.map(ProductView::id))
             .containsExactlyElementsOf(ids.reversed())
     }
+
+    @Test
+    fun `문의 이메일 주소를 올바르게 설정한다`(
+        @Autowired fixture: TestFixture,
+    ) {
+        // Arrange
+        fixture.deleteAllProducts()
+        fixture.createSellerThenSetAsDefaultUser()
+        val contactEmail = fixture.getSeller().contactEmail
+        fixture.registerProduct()
+
+        fixture.createShopperThenSetAsDefaultUser()
+
+        // Act
+        val response =
+            fixture
+                .client
+                .exchange<PageCarrier<ProductView>>(
+                    get("/shopper/products")
+                        .build(),
+                )
+
+        // Assert
+        val body = response.body!!
+        val actual = body.items[0].seller
+        assertThat(actual).isNotNull
+        assertThat(actual.contactEmail).isEqualTo(contactEmail)
+    }
 }
