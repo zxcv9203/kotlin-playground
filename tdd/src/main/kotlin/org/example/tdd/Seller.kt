@@ -6,7 +6,6 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import org.example.tdd.api.controller.SellerMeController
 import java.util.UUID
 
 @Entity
@@ -18,10 +17,14 @@ class Seller(
     val email: String,
     @Column(name = "hashed_password", nullable = false, length = 1000)
     val hashedPassword: String,
-    val contactEmail: String,
+    var contactEmail: String,
     @Column(unique = true)
     val id: UUID,
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val dataKey: Long = 0,
-)
+) {
+    fun changeContactEmail(newContactEmail: String) {
+        this.contactEmail = newContactEmail
+    }
+}
