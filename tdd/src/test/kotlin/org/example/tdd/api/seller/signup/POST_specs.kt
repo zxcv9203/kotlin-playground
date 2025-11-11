@@ -2,8 +2,8 @@ package org.example.tdd.api.seller.signup
 
 import org.assertj.core.api.Assertions.assertThat
 import org.example.tdd.SellerRepository
-import org.example.tdd.api.CommerceApiTest
 import org.example.tdd.command.CreateSellerCommand
+import org.example.tdd.helper.CommerceApiTest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource

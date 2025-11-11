@@ -1,11 +1,11 @@
 package org.example.tdd.api.shopper.me
 
 import org.assertj.core.api.Assertions.assertThat
-import org.example.tdd.api.CommerceApiTest
-import org.example.tdd.api.TestFixture
 import org.example.tdd.api.seller.signup.EmailGenerator
 import org.example.tdd.api.seller.signup.PasswordGenerator
 import org.example.tdd.api.seller.signup.UsernameGenerator
+import org.example.tdd.helper.CommerceApiTest
+import org.example.tdd.helper.TestFixture
 import org.example.tdd.view.ShopperMeView
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired

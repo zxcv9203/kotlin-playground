@@ -1,11 +1,11 @@
 package org.example.tdd.api.seller.changecontactemail
 
 import org.assertj.core.api.Assertions.assertThat
-import org.example.tdd.api.CommerceApiTest
-import org.example.tdd.api.InvalidEmailSource
-import org.example.tdd.api.TestFixture
 import org.example.tdd.api.seller.signup.EmailGenerator
 import org.example.tdd.command.ChangeContactEmailCommand
+import org.example.tdd.helper.CommerceApiTest
+import org.example.tdd.helper.InvalidEmailSource
+import org.example.tdd.helper.TestFixture
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
 import org.springframework.beans.factory.annotation.Autowired

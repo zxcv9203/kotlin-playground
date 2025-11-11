@@ -2,11 +2,11 @@ package org.example.tdd.api.shopper.signup
 
 import org.assertj.core.api.Assertions.assertThat
 import org.example.tdd.ShopperRepository
-import org.example.tdd.api.CommerceApiTest
 import org.example.tdd.api.seller.signup.EmailGenerator
 import org.example.tdd.api.seller.signup.PasswordGenerator
 import org.example.tdd.api.seller.signup.UsernameGenerator
 import org.example.tdd.command.CreateShopperCommand
+import org.example.tdd.helper.CommerceApiTest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource

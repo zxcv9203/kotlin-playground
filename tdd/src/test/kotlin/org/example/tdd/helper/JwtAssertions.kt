@@ -1,9 +1,9 @@
-package org.example.tdd.api
+package org.example.tdd.helper
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.ThrowingConsumer
-import java.util.*
+import java.util.Base64
 
 object JwtAssertions {
     fun conformsToJwtFormat(): ThrowingConsumer<String> =

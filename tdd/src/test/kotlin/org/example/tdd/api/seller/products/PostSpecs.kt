@@ -1,9 +1,9 @@
 package org.example.tdd.api.seller.products
 
 import org.assertj.core.api.Assertions.assertThat
-import org.example.tdd.RegisterProductCommandGenerator
-import org.example.tdd.api.CommerceApiTest
-import org.example.tdd.api.TestFixture
+import org.example.tdd.helper.CommerceApiTest
+import org.example.tdd.helper.RegisterProductCommandGenerator
+import org.example.tdd.helper.TestFixture
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource

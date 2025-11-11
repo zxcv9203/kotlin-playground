@@ -1,4 +1,4 @@
-package org.example.tdd
+package org.example.tdd.helper
 
 import org.example.tdd.command.RegisterProductCommand
 import java.math.BigDecimal

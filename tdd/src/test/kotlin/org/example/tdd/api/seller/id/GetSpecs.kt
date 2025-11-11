@@ -2,10 +2,10 @@ package org.example.tdd.api.seller.id
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.within
-import org.example.tdd.RegisterProductCommandGenerator
-import org.example.tdd.api.CommerceApiTest
-import org.example.tdd.api.ProductAssertions
-import org.example.tdd.api.TestFixture
+import org.example.tdd.helper.CommerceApiTest
+import org.example.tdd.helper.ProductAssertions
+import org.example.tdd.helper.RegisterProductCommandGenerator
+import org.example.tdd.helper.TestFixture
 import org.example.tdd.view.SellerProductView
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired

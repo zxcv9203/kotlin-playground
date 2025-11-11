@@ -1,4 +1,4 @@
-package org.example.tdd.api
+package org.example.tdd.helper
 
 import org.junit.jupiter.params.provider.MethodSource
 

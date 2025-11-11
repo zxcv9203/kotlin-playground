@@ -1,4 +1,4 @@
-package org.example.tdd
+package org.example.tdd.helper
 
 object TestDataSource {
     @JvmStatic

@@ -1,12 +1,12 @@
 package org.example.tdd.api.shopper.issueToken
 
 import org.assertj.core.api.Assertions.assertThat
-import org.example.tdd.api.CommerceApiTest
-import org.example.tdd.api.JwtAssertions
 import org.example.tdd.api.seller.signup.EmailGenerator
 import org.example.tdd.api.seller.signup.PasswordGenerator
 import org.example.tdd.api.seller.signup.UsernameGenerator
 import org.example.tdd.command.CreateShopperCommand
+import org.example.tdd.helper.CommerceApiTest
+import org.example.tdd.helper.JwtAssertions
 import org.example.tdd.query.IssueShopperToken
 import org.example.tdd.result.AccessTokenCarrier
 import org.junit.jupiter.api.DisplayName

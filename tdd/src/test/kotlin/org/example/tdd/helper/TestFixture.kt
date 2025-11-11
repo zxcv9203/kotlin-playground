@@ -1,7 +1,6 @@
-package org.example.tdd.api
+package org.example.tdd.helper
 
 import org.example.tdd.ProductRepository
-import org.example.tdd.RegisterProductCommandGenerator
 import org.example.tdd.api.seller.signup.EmailGenerator
 import org.example.tdd.api.seller.signup.PasswordGenerator
 import org.example.tdd.api.seller.signup.UsernameGenerator

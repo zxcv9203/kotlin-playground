@@ -1,4 +1,4 @@
-package org.example.tdd.api
+package org.example.tdd.helper
 
 import org.example.tdd.ProductRepository
 import org.springframework.boot.test.context.TestConfiguration

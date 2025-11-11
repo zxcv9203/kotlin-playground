@@ -1,4 +1,4 @@
-package org.example.tdd.api
+package org.example.tdd.helper
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.ThrowingConsumer
