@@ -1,11 +1,16 @@
 package loopers.p25643
 
-fun canStack(a: String, b: String): Boolean {
+fun canStack(
+    a: String,
+    b: String,
+): Boolean {
     val m = a.length
-    for (len in 1..m)
+    for (len in 1..m) {
         if (a.endsWith(b.take(len))) return true
-    for (len in 1 until m)
+    }
+    for (len in 1 until m) {
         if (a.startsWith(b.takeLast(len))) return true
+    }
     return false
 }
 
